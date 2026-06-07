@@ -1,0 +1,45 @@
+basePath: /api/v1
+definitions:
+  handlers.ErrorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  handlers.User:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: REST API with Swagger documentation.
+  title: UnfallAPI
+  version: "1.0"
+paths:
+  /users/{id}:
+    get:
+      description: Returns a single user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.User'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Get user by ID
+      tags:
+      - users
+swagger: "2.0"
