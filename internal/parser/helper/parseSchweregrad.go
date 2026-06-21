@@ -1,6 +1,6 @@
-package handlers
+package helper
 
-func parseSchweregrad(num int) string {
+func ParseSchweregrad(num int) string {
 	switch num {
 	case 1:
 		return "Unfall mit Getöteten"

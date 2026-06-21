@@ -1,6 +1,6 @@
-package handlers
+package helper
 
-func parseWochentag(num int) string {
+func ParseWochentag(num int) string {
 	switch num {
 	case 1:
 		return "Sonntag"

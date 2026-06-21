@@ -1,6 +1,6 @@
-package handlers
+package helper
 
-func parseUnfalltyp(num int) string {
+func ParseUnfalltyp(num int) string {
 	switch num {
 	case 1:
 		return "Fahrunfall"

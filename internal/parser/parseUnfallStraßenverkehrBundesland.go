@@ -1,9 +1,11 @@
-package handlers
+package parser
 
 import (
 	"io"
 	"strconv"
 	"strings"
+
+	"github.com/Kenosun/UnfallAPI/internal/parser/helper"
 )
 
 type UnfallStraßenverkehrBundesland struct {
@@ -16,7 +18,7 @@ type UnfallStraßenverkehrBundesland struct {
 }
 
 func ParseUnfallStraßenverkehrBundeslandYearly() ([]UnfallStraßenverkehrBundesland, error) {
-	file, reader, err := openCSV("./unfallData/csv/46241-0022_de.csv")
+	file, reader, err := helper.OpenCSV("./unfallData/csv/46241-0022_de.csv")
 	if err != nil {
 		return nil, err
 	}
@@ -76,7 +78,7 @@ func ParseUnfallStraßenverkehrBundeslandYearly() ([]UnfallStraßenverkehrBundes
 					break
 				}
 
-				count, valid := parseCount(record[colIdx])
+				count, valid := helper.ParseCount(record[colIdx])
 				if !valid {
 					continue
 				}

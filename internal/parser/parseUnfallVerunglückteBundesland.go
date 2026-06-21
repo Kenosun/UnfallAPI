@@ -1,28 +1,30 @@
-package handlers
+package parser
 
 import (
 	"io"
 	"strconv"
 	"strings"
+
+	"github.com/Kenosun/UnfallAPI/internal/parser/helper"
 )
 
-type UnfallStatistikBundesland struct {
-	Bundesland string
-	Kategorie  string
-	Ortslage   string
-	Jahr       int
-	Monat      int // 1-12 for months, 0 for full year data
-	Anzahl     int
+type UnfallVerunglückteBundesland struct {
+	Bundesland  string
+	Ortslage    string
+	Schweregrad string
+	Jahr        int
+	Monat       int // 1-12 for months, 0 for full year data
+	Anzahl      int
 }
 
-func ParseUnfallStatistikBundeslandYearly() ([]UnfallStatistikBundesland, error) {
-	file, reader, err := openCSV("./unfallData/csv/46241-0020_de.csv")
+func ParseUnfallVerunglückteBundeslandYearly() ([]UnfallVerunglückteBundesland, error) {
+	file, reader, err := helper.OpenCSV("./unfallData/csv/46241-0023_de.csv")
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
 
-	var records []UnfallStatistikBundesland
+	var records []UnfallVerunglückteBundesland
 	var years []int
 	headerFound := false
 
@@ -40,8 +42,9 @@ func ParseUnfallStatistikBundeslandYearly() ([]UnfallStatistikBundesland, error)
 			continue
 		}
 
-		// identify year row
+		// identify header row
 		if !headerFound && record[0] == "" && record[1] == "" && record[2] == "" {
+			// year columns start at index 3
 			for i := 3; i < len(record); i++ {
 				yearStr := strings.TrimSpace(record[i])
 				if yearStr == "" {
@@ -66,8 +69,8 @@ func ParseUnfallStatistikBundeslandYearly() ([]UnfallStatistikBundesland, error)
 			}
 
 			bundesland := strings.TrimSpace(record[0])
-			kategorie := strings.TrimSpace(record[1])
-			ortslage := strings.TrimSpace(record[2])
+			ortslage := strings.TrimSpace(record[1])
+			schweregrad := strings.TrimSpace(record[2])
 
 			// flatten the column values back to individual records per year
 			for i, year := range years {
@@ -76,18 +79,18 @@ func ParseUnfallStatistikBundeslandYearly() ([]UnfallStatistikBundesland, error)
 					break
 				}
 
-				count, valid := parseCount(record[colIdx])
+				count, valid := helper.ParseCount(record[colIdx])
 				if !valid {
 					continue
 				}
 
-				records = append(records, UnfallStatistikBundesland{
-					Bundesland: bundesland,
-					Kategorie:  kategorie,
-					Ortslage:   ortslage,
-					Jahr:       year,
-					Monat:      0,
-					Anzahl:     count,
+				records = append(records, UnfallVerunglückteBundesland{
+					Bundesland:  bundesland,
+					Ortslage:    ortslage,
+					Schweregrad: schweregrad,
+					Jahr:        year,
+					Monat:       0,
+					Anzahl:      count,
 				})
 			}
 		}
@@ -96,14 +99,14 @@ func ParseUnfallStatistikBundeslandYearly() ([]UnfallStatistikBundesland, error)
 	return records, nil
 }
 
-func ParseUnfallStatistikBundeslandMonthly() ([]UnfallStatistikBundesland, error) {
-	file, reader, err := openCSV("./unfallData/csv/46241-0021_de.csv")
+func ParseUnfallVerunglückteBundeslandMonthly() ([]UnfallVerunglückteBundesland, error) {
+	file, reader, err := helper.OpenCSV("./unfallData/csv/46241-0024_de.csv")
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
 
-	var records []UnfallStatistikBundesland
+	var records []UnfallVerunglückteBundesland
 	var columns []HeaderYearMonth
 	var yearRow []string
 	headerFound := false
@@ -123,7 +126,7 @@ func ParseUnfallStatistikBundeslandMonthly() ([]UnfallStatistikBundesland, error
 
 		// identify year row
 		if !headerFound && yearRow == nil && record[0] == "" && record[1] == "" && record[2] == "" {
-			// check if row actually contains numbers/years
+			// check if row actually contains years/numbers
 			isYearRow := false
 			for i := 3; i < len(record); i++ {
 				if _, err := strconv.Atoi(strings.TrimSpace(record[i])); err == nil {
@@ -139,16 +142,22 @@ func ParseUnfallStatistikBundeslandMonthly() ([]UnfallStatistikBundesland, error
 
 		// identify month row
 		if !headerFound && yearRow != nil && record[0] == "" && record[1] == "" && record[2] == "" {
+			var lastValidYear int = -1
+
 			for i := 3; i < len(record); i++ {
 				yearStr := strings.TrimSpace(yearRow[i])
 				monthStr := strings.ToLower(strings.TrimSpace(record[i]))
 
-				year, yErr := strconv.Atoi(yearStr)
-				month := parseMonthToInt(monthStr)
+				// if a new year is explicitly listed, update lastValidYear
+				if year, yErr := strconv.Atoi(yearStr); yErr == nil {
+					lastValidYear = year
+				}
+
+				month := helper.ParseMonthToInt(monthStr)
 
 				// only add valid columns where both year and month parse correctly
-				if yErr == nil && month > 0 {
-					columns = append(columns, HeaderYearMonth{Year: year, Month: month})
+				if lastValidYear != -1 && month > 0 {
+					columns = append(columns, HeaderYearMonth{Year: lastValidYear, Month: month})
 				} else {
 					// add a placeholder if columns don't align
 					columns = append(columns, HeaderYearMonth{Year: -1, Month: -1})
@@ -160,14 +169,13 @@ func ParseUnfallStatistikBundeslandMonthly() ([]UnfallStatistikBundesland, error
 
 		// process data rows
 		if headerFound {
-			// skip footer metadata rows or table descriptors
 			if record[0] == "" || record[1] == "" || record[2] == "" || strings.HasPrefix(record[0], "Tabelle") {
 				continue
 			}
 
 			bundesland := strings.TrimSpace(record[0])
-			kategorie := strings.TrimSpace(record[1])
-			ortslage := strings.TrimSpace(record[2])
+			ortslage := strings.TrimSpace(record[1])
+			schweregrad := strings.TrimSpace(record[2])
 
 			// iterate through columns
 			for i, colInfo := range columns {
@@ -180,18 +188,18 @@ func ParseUnfallStatistikBundeslandMonthly() ([]UnfallStatistikBundesland, error
 					break
 				}
 
-				count, valid := parseCount(record[colIdx])
+				count, valid := helper.ParseCount(record[colIdx])
 				if !valid {
 					continue
 				}
 
-				records = append(records, UnfallStatistikBundesland{
-					Bundesland: bundesland,
-					Kategorie:  kategorie,
-					Ortslage:   ortslage,
-					Jahr:       colInfo.Year,
-					Monat:      colInfo.Month,
-					Anzahl:     count,
+				records = append(records, UnfallVerunglückteBundesland{
+					Bundesland:  bundesland,
+					Ortslage:    ortslage,
+					Schweregrad: schweregrad,
+					Jahr:        colInfo.Year,
+					Monat:       colInfo.Month,
+					Anzahl:      count,
 				})
 			}
 		}

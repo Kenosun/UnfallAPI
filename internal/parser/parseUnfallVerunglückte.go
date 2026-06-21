@@ -1,9 +1,11 @@
-package handlers
+package parser
 
 import (
 	"io"
 	"strconv"
 	"strings"
+
+	"github.com/Kenosun/UnfallAPI/internal/parser/helper"
 )
 
 type UnfallVerunglückte struct {
@@ -18,7 +20,7 @@ type UnfallVerunglückte struct {
 }
 
 func ParseUnfallVerunglückteYearly() ([]UnfallVerunglückte, error) {
-	file, reader, err := openCSV("./unfallData/csv/46241-0007_de.csv")
+	file, reader, err := helper.OpenCSV("./unfallData/csv/46241-0007_de.csv")
 	if err != nil {
 		return nil, err
 	}
@@ -106,7 +108,7 @@ func ParseUnfallVerunglückteYearly() ([]UnfallVerunglückte, error) {
 					break
 				}
 
-				count, valid := parseCount(record[colIdx])
+				count, valid := helper.ParseCount(record[colIdx])
 				if !valid {
 					continue
 				}
@@ -129,7 +131,7 @@ func ParseUnfallVerunglückteYearly() ([]UnfallVerunglückte, error) {
 }
 
 func ParseUnfallVerunglückteMonthly() ([]UnfallVerunglückte, error) {
-	file, reader, err := openCSV("./unfallData/csv/46241-0008_de.csv")
+	file, reader, err := helper.OpenCSV("./unfallData/csv/46241-0008_de.csv")
 	if err != nil {
 		return nil, err
 	}
@@ -207,7 +209,7 @@ func ParseUnfallVerunglückteMonthly() ([]UnfallVerunglückte, error) {
 			}
 
 			monthStr := strings.ToLower(strings.TrimSpace(record[1]))
-			month := parseMonthToInt(monthStr)
+			month := helper.ParseMonthToInt(monthStr)
 			if month == -1 {
 				continue // skip row if month is invalid
 			}
@@ -223,7 +225,7 @@ func ParseUnfallVerunglückteMonthly() ([]UnfallVerunglückte, error) {
 					break
 				}
 
-				count, valid := parseCount(record[colIdx])
+				count, valid := helper.ParseCount(record[colIdx])
 				if !valid {
 					continue
 				}

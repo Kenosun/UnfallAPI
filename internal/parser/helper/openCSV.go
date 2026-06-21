@@ -1,11 +1,11 @@
-package handlers
+package helper
 
 import (
 	"encoding/csv"
 	"os"
 )
 
-func openCSV(path string) (*os.File, *csv.Reader, error) {
+func OpenCSV(path string) (*os.File, *csv.Reader, error) {
 	file, err := os.Open(path)
 	if err != nil {
 		return nil, nil, err

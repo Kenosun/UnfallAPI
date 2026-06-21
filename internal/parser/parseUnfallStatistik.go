@@ -1,27 +1,29 @@
-package handlers
+package parser
 
 import (
 	"io"
 	"strconv"
 	"strings"
+
+	"github.com/Kenosun/UnfallAPI/internal/parser/helper"
 )
 
-type UnfallFehlverhalten struct {
-	Verkehrsart string
-	Kategorie   string
-	Jahr        int
-	Monat       int // 1-12 for months, 0 for full year data
-	Anzahl      int
+type UnfallStatistik struct {
+	Kategorie string
+	Ortslage  string
+	Jahr      int
+	Monat     int // 1-12 for months, 0 for full year data
+	Anzahl    int
 }
 
-func ParseUnfallFehlverhaltenYearly() ([]UnfallFehlverhalten, error) {
-	file, reader, err := openCSV("./unfallData/csv/46241-0009_de.csv")
+func ParseUnfallStatistikYearly() ([]UnfallStatistik, error) {
+	file, reader, err := helper.OpenCSV("./unfallData/csv/46241-0001_de.csv")
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
 
-	var records []UnfallFehlverhalten
+	var records []UnfallStatistik
 	var years []int
 	headerFound := false
 
@@ -59,13 +61,13 @@ func ParseUnfallFehlverhaltenYearly() ([]UnfallFehlverhalten, error) {
 
 		// process data rows
 		if headerFound {
-			// skip footer metadata rows or table descriptors
-			if record[0] == "" || record[1] == "" || strings.HasPrefix(record[0], "Tabelle") {
+			// skip footer metadata rows or incomplete blocks
+			if record[0] == "" || record[1] == "" {
 				continue
 			}
 
-			verkehrsart := strings.TrimSpace(record[0])
-			kategorie := strings.TrimSpace(record[1])
+			kategorie := strings.TrimSpace(record[0])
+			ortslage := strings.TrimSpace(record[1])
 
 			// flatten the column values back to individual records per year
 			for i, year := range years {
@@ -74,17 +76,17 @@ func ParseUnfallFehlverhaltenYearly() ([]UnfallFehlverhalten, error) {
 					break
 				}
 
-				count, valid := parseCount(record[colIdx])
+				count, valid := helper.ParseCount(record[colIdx])
 				if !valid {
 					continue
 				}
 
-				records = append(records, UnfallFehlverhalten{
-					Verkehrsart: verkehrsart,
-					Kategorie:   kategorie,
-					Jahr:        year,
-					Monat:       0,
-					Anzahl:      count,
+				records = append(records, UnfallStatistik{
+					Kategorie: kategorie,
+					Ortslage:  ortslage,
+					Jahr:      year,
+					Monat:     0,
+					Anzahl:    count,
 				})
 			}
 		}
@@ -93,14 +95,14 @@ func ParseUnfallFehlverhaltenYearly() ([]UnfallFehlverhalten, error) {
 	return records, nil
 }
 
-func ParseUnfallFehlverhaltenMonthly() ([]UnfallFehlverhalten, error) {
-	file, reader, err := openCSV("./unfallData/csv/46241-0010_de.csv")
+func ParseUnfallStatistikMonthly() ([]UnfallStatistik, error) {
+	file, reader, err := helper.OpenCSV("./unfallData/csv/46241-0002_de.csv")
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
 
-	var records []UnfallFehlverhalten
+	var records []UnfallStatistik
 	var columns []HeaderYearMonth
 	var yearRow []string
 	headerFound := false
@@ -141,7 +143,7 @@ func ParseUnfallFehlverhaltenMonthly() ([]UnfallFehlverhalten, error) {
 				monthStr := strings.ToLower(strings.TrimSpace(record[i]))
 
 				year, yErr := strconv.Atoi(yearStr)
-				month := parseMonthToInt(monthStr)
+				month := helper.ParseMonthToInt(monthStr)
 
 				// only add valid columns where both year and month parse correctly
 				if yErr == nil && month > 0 {
@@ -162,8 +164,8 @@ func ParseUnfallFehlverhaltenMonthly() ([]UnfallFehlverhalten, error) {
 				continue
 			}
 
-			verkehrsart := strings.TrimSpace(record[0])
-			kategorie := strings.TrimSpace(record[1])
+			kategorie := strings.TrimSpace(record[0])
+			ortslage := strings.TrimSpace(record[1])
 
 			// iterate through columns
 			for i, colInfo := range columns {
@@ -176,17 +178,17 @@ func ParseUnfallFehlverhaltenMonthly() ([]UnfallFehlverhalten, error) {
 					break
 				}
 
-				count, valid := parseCount(record[colIdx])
+				count, valid := helper.ParseCount(record[colIdx])
 				if !valid {
 					continue
 				}
 
-				records = append(records, UnfallFehlverhalten{
-					Verkehrsart: verkehrsart,
-					Kategorie:   kategorie,
-					Jahr:        colInfo.Year,
-					Monat:       colInfo.Month,
-					Anzahl:      count,
+				records = append(records, UnfallStatistik{
+					Kategorie: kategorie,
+					Ortslage:  ortslage,
+					Jahr:      colInfo.Year,
+					Monat:     colInfo.Month,
+					Anzahl:    count,
 				})
 			}
 		}

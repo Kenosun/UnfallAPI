@@ -1,11 +1,11 @@
-package handlers
+package helper
 
 import (
 	"strconv"
 	"strings"
 )
 
-func parseCount(valStr string) (int, bool) {
+func ParseCount(valStr string) (int, bool) {
 	valStr = strings.TrimSpace(valStr)
 	if valStr == "" || valStr == "-" {
 		return 0, false

@@ -1,9 +1,10 @@
-package handlers
+package parser
 
 import (
 	"strconv"
 	"strings"
 
+	"github.com/Kenosun/UnfallAPI/internal/parser/helper"
 	"github.com/xuri/excelize/v2"
 )
 
@@ -99,7 +100,7 @@ func ParseOrt() ([]Ort, error) {
 
 		// map columns to the struct
 		ort := Ort{
-			Bundesland:         parseBundesland(row[2]),
+			Bundesland:         helper.ParseBundesland(row[2]),
 			Regierungsbezirk:   strings.TrimSpace(row[3]),
 			Kreis:              strings.TrimSpace(row[4]),
 			Gemeinde:           strings.TrimSpace(row[6]),

@@ -1,6 +1,6 @@
-package handlers
+package helper
 
-func parseUnfallart(num int) string {
+func ParseUnfallart(num int) string {
 	switch num {
 	case 1:
 		return "Zusammenstoß mit anfahrendem/anhaltendem/ruhendem Fahrzeug"

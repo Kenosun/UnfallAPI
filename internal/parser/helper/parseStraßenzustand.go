@@ -1,6 +1,6 @@
-package handlers
+package helper
 
-func parseStraßenzustand(num int) string {
+func ParseStraßenzustand(num int) string {
 	switch num {
 	case 0:
 		return "trocken"

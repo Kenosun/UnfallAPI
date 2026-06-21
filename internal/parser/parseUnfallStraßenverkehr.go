@@ -1,29 +1,30 @@
-package handlers
+package parser
 
 import (
 	"io"
 	"strconv"
 	"strings"
+
+	"github.com/Kenosun/UnfallAPI/internal/parser/helper"
 )
 
-type UnfallPersonenschaden struct {
-	Unfalltyp   string
-	Ortslage    string
-	Schweregrad string
-	Kategorie   string
-	Jahr        int
-	Monat       int // 1-12 for months, 0 for full year data
-	Anzahl      int
+type UnfallStraßenverkehr struct {
+	Straßenklasse string
+	Ortslage      string
+	Kategorie     string
+	Jahr          int
+	Monat         int // 1-12 for months, 0 for full year data
+	Anzahl        int
 }
 
-func ParseUnfallPersonenschadenYearly() ([]UnfallPersonenschaden, error) {
-	file, reader, err := openCSV("./unfallData/csv/46241-0005_de.csv")
+func ParseUnfallStraßenverkehrYearly() ([]UnfallStraßenverkehr, error) {
+	file, reader, err := helper.OpenCSV("./unfallData/csv/46241-0003_de.csv")
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
 
-	var records []UnfallPersonenschaden
+	var records []UnfallStraßenverkehr
 	var years []int
 	headerFound := false
 
@@ -37,14 +38,14 @@ func ParseUnfallPersonenschadenYearly() ([]UnfallPersonenschaden, error) {
 		}
 
 		// skip empty or incomplete metadata rows
-		if len(record) < 6 {
+		if len(record) < 5 {
 			continue
 		}
 
-		// identify header row
-		if !headerFound && record[0] == "" && record[1] == "" && record[2] == "" && record[3] == "" && record[4] == "" {
-			// year columns start at index 5
-			for i := 5; i < len(record); i++ {
+		// identify year row
+		if !headerFound && record[0] == "" && record[1] == "" && record[2] == "" && record[3] == "" {
+			// year columns start at index 4
+			for i := 4; i < len(record); i++ {
 				yearStr := strings.TrimSpace(record[i])
 				if yearStr == "" {
 					continue
@@ -63,35 +64,33 @@ func ParseUnfallPersonenschadenYearly() ([]UnfallPersonenschaden, error) {
 		// process data rows
 		if headerFound {
 			// skip footer metadata rows or incomplete blocks
-			if record[0] == "" || record[1] == "" || record[2] == "" || record[3] == "" {
+			if record[0] == "" || record[1] == "" || record[2] == "" {
 				continue
 			}
 
-			unfalltyp := strings.TrimSpace(record[0])
+			strassenklasse := strings.TrimSpace(record[0])
 			ortslage := strings.TrimSpace(record[1])
-			schweregrad := strings.TrimSpace(record[2])
-			kategorie := strings.TrimSpace(record[3])
+			kategorie := strings.TrimSpace(record[2])
 
 			// flatten the column values back to individual records per year
 			for i, year := range years {
-				colIdx := i + 5
+				colIdx := i + 4
 				if colIdx >= len(record) {
 					break
 				}
 
-				count, valid := parseCount(record[colIdx])
+				count, valid := helper.ParseCount(record[colIdx])
 				if !valid {
 					continue
 				}
 
-				records = append(records, UnfallPersonenschaden{
-					Unfalltyp:   unfalltyp,
-					Ortslage:    ortslage,
-					Schweregrad: schweregrad,
-					Kategorie:   kategorie,
-					Jahr:        year,
-					Monat:       0,
-					Anzahl:      count,
+				records = append(records, UnfallStraßenverkehr{
+					Straßenklasse: strassenklasse,
+					Ortslage:      ortslage,
+					Kategorie:     kategorie,
+					Jahr:          year,
+					Monat:         0,
+					Anzahl:        count,
 				})
 			}
 		}
@@ -100,15 +99,14 @@ func ParseUnfallPersonenschadenYearly() ([]UnfallPersonenschaden, error) {
 	return records, nil
 }
 
-// ParseUnfallPersonenschadenMonthly parses the monthly multi-tiered header dataset (46241-0006_de.csv)
-func ParseUnfallPersonenschadenMonthly() ([]UnfallPersonenschaden, error) {
-	file, reader, err := openCSV("./unfallData/csv/46241-0006_de.csv")
+func ParseUnfallStraßenverkehrMonthly() ([]UnfallStraßenverkehr, error) {
+	file, reader, err := helper.OpenCSV("./unfallData/csv/46241-0004_de.csv")
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
 
-	var records []UnfallPersonenschaden
+	var records []UnfallStraßenverkehr
 	var columns []HeaderYearMonth
 	var yearRow []string
 	headerFound := false
@@ -122,15 +120,15 @@ func ParseUnfallPersonenschadenMonthly() ([]UnfallPersonenschaden, error) {
 			return nil, err
 		}
 
-		if len(record) < 6 {
+		if len(record) < 5 {
 			continue
 		}
 
 		// identify year row
-		if !headerFound && yearRow == nil && record[0] == "" && record[1] == "" && record[2] == "" && record[3] == "" && record[4] == "" {
-			// check if row actually contains years/numbers
+		if !headerFound && yearRow == nil && record[0] == "" && record[1] == "" && record[2] == "" && record[3] == "" {
+			// check if row actually contains numbers/years
 			isYearRow := false
-			for i := 5; i < len(record); i++ {
+			for i := 4; i < len(record); i++ {
 				if _, err := strconv.Atoi(strings.TrimSpace(record[i])); err == nil {
 					isYearRow = true
 					break
@@ -143,10 +141,10 @@ func ParseUnfallPersonenschadenMonthly() ([]UnfallPersonenschaden, error) {
 		}
 
 		// identify month row
-		if !headerFound && yearRow != nil && record[0] == "" && record[1] == "" && record[2] == "" && record[3] == "" && record[4] == "" {
+		if !headerFound && yearRow != nil && record[0] == "" && record[1] == "" && record[2] == "" && record[3] == "" {
 			var lastValidYear int = -1
 
-			for i := 5; i < len(record); i++ {
+			for i := 4; i < len(record); i++ {
 				yearStr := strings.TrimSpace(yearRow[i])
 				monthStr := strings.ToLower(strings.TrimSpace(record[i]))
 
@@ -155,7 +153,7 @@ func ParseUnfallPersonenschadenMonthly() ([]UnfallPersonenschaden, error) {
 					lastValidYear = year
 				}
 
-				month := parseMonthToInt(monthStr)
+				month := helper.ParseMonthToInt(monthStr)
 
 				// only add valid columns where both year and month parse correctly
 				if lastValidYear != -1 && month > 0 {
@@ -172,14 +170,13 @@ func ParseUnfallPersonenschadenMonthly() ([]UnfallPersonenschaden, error) {
 		// process data rows
 		if headerFound {
 			// skip footer metadata rows or table descriptors
-			if record[0] == "" || record[1] == "" || record[2] == "" || record[3] == "" || strings.HasPrefix(record[0], "Tabelle") {
+			if record[0] == "" || record[1] == "" || record[2] == "" || strings.HasPrefix(record[0], "Tabelle") {
 				continue
 			}
 
-			unfalltyp := strings.TrimSpace(record[0])
+			strassenklasse := strings.TrimSpace(record[0])
 			ortslage := strings.TrimSpace(record[1])
-			schweregrad := strings.TrimSpace(record[2])
-			kategorie := strings.TrimSpace(record[3])
+			kategorie := strings.TrimSpace(record[2])
 
 			// iterate through columns
 			for i, colInfo := range columns {
@@ -187,24 +184,23 @@ func ParseUnfallPersonenschadenMonthly() ([]UnfallPersonenschaden, error) {
 					continue // skip invalid/empty header columns
 				}
 
-				colIdx := i + 5
+				colIdx := i + 4
 				if colIdx >= len(record) {
 					break
 				}
 
-				count, valid := parseCount(record[colIdx])
+				count, valid := helper.ParseCount(record[colIdx])
 				if !valid {
 					continue
 				}
 
-				records = append(records, UnfallPersonenschaden{
-					Unfalltyp:   unfalltyp,
-					Ortslage:    ortslage,
-					Schweregrad: schweregrad,
-					Kategorie:   kategorie,
-					Jahr:        colInfo.Year,
-					Monat:       colInfo.Month,
-					Anzahl:      count,
+				records = append(records, UnfallStraßenverkehr{
+					Straßenklasse: strassenklasse,
+					Ortslage:      ortslage,
+					Kategorie:     kategorie,
+					Jahr:          colInfo.Year,
+					Monat:         colInfo.Month,
+					Anzahl:        count,
 				})
 			}
 		}

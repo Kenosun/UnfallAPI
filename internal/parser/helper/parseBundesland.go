@@ -1,6 +1,6 @@
-package handlers
+package helper
 
-func parseBundesland(numstr string) string {
+func ParseBundesland(numstr string) string {
 	switch numstr {
 	case "01":
 		return "Schleswig-Holstein"

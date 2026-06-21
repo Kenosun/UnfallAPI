@@ -1,8 +1,8 @@
-package handlers
+package helper
 
 import "strings"
 
-func parseMonthToInt(month string) int {
+func ParseMonthToInt(month string) int {
 	switch strings.ToLower(month) {
 	case "januar":
 		return 1
