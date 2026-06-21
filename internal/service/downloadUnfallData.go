@@ -1,4 +1,4 @@
-package handlers
+package service
 
 import (
 	"archive/zip"
@@ -52,7 +52,7 @@ var urls = [...]string{
 	"https://www.destatis.de/DE/Themen/Laender-Regionen/Regionales/Gemeindeverzeichnis/Administrativ/Archiv/GVAuszugQ/AuszugGV2QAktuell.xlsx?__blob=publicationFile&v=13",
 }
 
-func LoadUnfallData() error {
+func DownloadUnfallData() error {
 	// data already exists
 	_, errCsv := os.Stat(csvPath)
 	_, errShp := os.Stat(shpPath)
