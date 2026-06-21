@@ -7,35 +7,11 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/Kenosun/UnfallAPI/internal/data"
 	"github.com/Kenosun/UnfallAPI/internal/parser/helper"
 )
 
-type Unfallort struct {
-	Bundesland                 string
-	Regierungsbezirk           string
-	Kreis                      string
-	Gemeinde                   string
-	Jahr                       int
-	Monat                      int
-	Uhrzeit                    string
-	Wochentag                  string
-	Schweregrad                string
-	Unfallart                  string
-	Unfalltyp                  string
-	Lichtverhältnis            string
-	MitFahrrad                 bool
-	MitPKW                     bool
-	MitFußgänger               bool
-	MitKraftrad                bool
-	MitGüterkraftfahrzeug      bool
-	MitSonstigenVerkehrsmittel bool
-	IstStraße                  bool
-	Straßenzustand             string
-	Latitude                   float64
-	Longitude                  float64
-}
-
-func ParseUnfallort(filePath string) ([]Unfallort, error) {
+func ParseUnfall(filePath string) ([]data.Unfall, error) {
 	file, err := os.Open(filePath)
 	if err != nil {
 		return nil, err
@@ -60,7 +36,7 @@ func ParseUnfallort(filePath string) ([]Unfallort, error) {
 		headerMap[strings.ToUpper(cleanName)] = idx
 	}
 
-	var records []Unfallort
+	var records []data.Unfall
 
 	// process rows
 	for {
@@ -136,7 +112,7 @@ func ParseUnfallort(filePath string) ([]Unfallort, error) {
 			return false
 		}
 
-		item := Unfallort{
+		item := data.Unfall{
 			Bundesland:                 helper.ParseBundesland(parseString("ULAND")),
 			Regierungsbezirk:           parseString("UREGBEZ"),
 			Kreis:                      parseString("UKREIS"),

@@ -5,26 +5,18 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/Kenosun/UnfallAPI/internal/data"
 	"github.com/Kenosun/UnfallAPI/internal/parser/helper"
 )
 
-type UnfallStatistikBundesland struct {
-	Bundesland string
-	Kategorie  string
-	Ortslage   string
-	Jahr       int
-	Monat      int // 1-12 for months, 0 for full year data
-	Anzahl     int
-}
-
-func ParseUnfallStatistikBundeslandYearly() ([]UnfallStatistikBundesland, error) {
+func ParseUnfallStatistikBundeslandYearly() ([]data.UnfallStatistikBundesland, error) {
 	file, reader, err := helper.OpenCSV("./unfallData/csv/46241-0020_de.csv")
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
 
-	var records []UnfallStatistikBundesland
+	var records []data.UnfallStatistikBundesland
 	var years []int
 	headerFound := false
 
@@ -83,7 +75,7 @@ func ParseUnfallStatistikBundeslandYearly() ([]UnfallStatistikBundesland, error)
 					continue
 				}
 
-				records = append(records, UnfallStatistikBundesland{
+				records = append(records, data.UnfallStatistikBundesland{
 					Bundesland: bundesland,
 					Kategorie:  kategorie,
 					Ortslage:   ortslage,
@@ -98,14 +90,14 @@ func ParseUnfallStatistikBundeslandYearly() ([]UnfallStatistikBundesland, error)
 	return records, nil
 }
 
-func ParseUnfallStatistikBundeslandMonthly() ([]UnfallStatistikBundesland, error) {
+func ParseUnfallStatistikBundeslandMonthly() ([]data.UnfallStatistikBundesland, error) {
 	file, reader, err := helper.OpenCSV("./unfallData/csv/46241-0021_de.csv")
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
 
-	var records []UnfallStatistikBundesland
+	var records []data.UnfallStatistikBundesland
 	var columns []HeaderYearMonth
 	var yearRow []string
 	headerFound := false
@@ -187,7 +179,7 @@ func ParseUnfallStatistikBundeslandMonthly() ([]UnfallStatistikBundesland, error
 					continue
 				}
 
-				records = append(records, UnfallStatistikBundesland{
+				records = append(records, data.UnfallStatistikBundesland{
 					Bundesland: bundesland,
 					Kategorie:  kategorie,
 					Ortslage:   ortslage,

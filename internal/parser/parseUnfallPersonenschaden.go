@@ -5,27 +5,18 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/Kenosun/UnfallAPI/internal/data"
 	"github.com/Kenosun/UnfallAPI/internal/parser/helper"
 )
 
-type UnfallPersonenschaden struct {
-	Unfalltyp   string
-	Ortslage    string
-	Schweregrad string
-	Kategorie   string
-	Jahr        int
-	Monat       int // 1-12 for months, 0 for full year data
-	Anzahl      int
-}
-
-func ParseUnfallPersonenschadenYearly() ([]UnfallPersonenschaden, error) {
+func ParseUnfallPersonenschadenYearly() ([]data.UnfallPersonenschaden, error) {
 	file, reader, err := helper.OpenCSV("./unfallData/csv/46241-0005_de.csv")
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
 
-	var records []UnfallPersonenschaden
+	var records []data.UnfallPersonenschaden
 	var years []int
 	headerFound := false
 
@@ -86,7 +77,7 @@ func ParseUnfallPersonenschadenYearly() ([]UnfallPersonenschaden, error) {
 					continue
 				}
 
-				records = append(records, UnfallPersonenschaden{
+				records = append(records, data.UnfallPersonenschaden{
 					Unfalltyp:   unfalltyp,
 					Ortslage:    ortslage,
 					Schweregrad: schweregrad,
@@ -103,14 +94,14 @@ func ParseUnfallPersonenschadenYearly() ([]UnfallPersonenschaden, error) {
 }
 
 // ParseUnfallPersonenschadenMonthly parses the monthly multi-tiered header dataset (46241-0006_de.csv)
-func ParseUnfallPersonenschadenMonthly() ([]UnfallPersonenschaden, error) {
+func ParseUnfallPersonenschadenMonthly() ([]data.UnfallPersonenschaden, error) {
 	file, reader, err := helper.OpenCSV("./unfallData/csv/46241-0006_de.csv")
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
 
-	var records []UnfallPersonenschaden
+	var records []data.UnfallPersonenschaden
 	var columns []HeaderYearMonth
 	var yearRow []string
 	headerFound := false
@@ -199,7 +190,7 @@ func ParseUnfallPersonenschadenMonthly() ([]UnfallPersonenschaden, error) {
 					continue
 				}
 
-				records = append(records, UnfallPersonenschaden{
+				records = append(records, data.UnfallPersonenschaden{
 					Unfalltyp:   unfalltyp,
 					Ortslage:    ortslage,
 					Schweregrad: schweregrad,

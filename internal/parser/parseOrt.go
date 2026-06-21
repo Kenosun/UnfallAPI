@@ -4,28 +4,10 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/Kenosun/UnfallAPI/internal/data"
 	"github.com/Kenosun/UnfallAPI/internal/parser/helper"
 	"github.com/xuri/excelize/v2"
 )
-
-type Ort struct {
-	Bundesland         string
-	Regierungsbezirk   string
-	Kreis              string
-	Gemeinde           string
-	Name               string
-	Gemeindeverband    string
-	Landkreis          string
-	Postleitzahl       string
-	Fläche             float64
-	Bevölkerung        int
-	Männlich           int
-	Weiblich           int
-	Reisegebiet        string
-	Verstädterungsgrad string
-	Latitude           float64
-	Longitude          float64
-}
 
 func normalizeValue(val string) string {
 	val = strings.ReplaceAll(val, " ", "")      // remove spaces
@@ -33,7 +15,7 @@ func normalizeValue(val string) string {
 	return val
 }
 
-func ParseOrt() ([]Ort, error) {
+func ParseOrt() ([]data.Ort, error) {
 	// open file
 	file, err := excelize.OpenFile("./unfallData/Gemeindeverzeichnis.xlsx")
 	if err != nil {
@@ -47,7 +29,7 @@ func ParseOrt() ([]Ort, error) {
 		return nil, err
 	}
 
-	var orte []Ort
+	var orte []data.Ort
 	var landkreis string
 	var gemeindeverband string
 
@@ -99,7 +81,7 @@ func ParseOrt() ([]Ort, error) {
 		latitude, _ := strconv.ParseFloat(latStr, 64)
 
 		// map columns to the struct
-		ort := Ort{
+		ort := data.Ort{
 			Bundesland:         helper.ParseBundesland(row[2]),
 			Regierungsbezirk:   strings.TrimSpace(row[3]),
 			Kreis:              strings.TrimSpace(row[4]),

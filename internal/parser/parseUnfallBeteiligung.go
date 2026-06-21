@@ -5,29 +5,18 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/Kenosun/UnfallAPI/internal/data"
 	"github.com/Kenosun/UnfallAPI/internal/parser/helper"
 )
 
-type UnfallBeteiligung struct {
-	Verkehrsart     string
-	Kategorie       string
-	Ortslage        string
-	Geschlecht      string
-	Altersgruppe    string
-	Beteiligungsart string // "Unfallbeteiligte" / "Hauptverursacher des Unfalls"
-	Jahr            int
-	Monat           int // 1-12 for months, 0 for full year data
-	Anzahl          int
-}
-
-func ParseUnfallBeteiligungYearly() ([]UnfallBeteiligung, error) {
+func ParseUnfallBeteiligungYearly() ([]data.UnfallBeteiligung, error) {
 	file, reader, err := helper.OpenCSV("./unfallData/csv/46241-0011_de.csv")
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
 
-	var records []UnfallBeteiligung
+	var records []data.UnfallBeteiligung
 	var headers []HeaderUnfallBeteiligung
 	var geschlechtRow []string
 	var altersgruppeRow []string
@@ -131,7 +120,7 @@ func ParseUnfallBeteiligungYearly() ([]UnfallBeteiligung, error) {
 					continue
 				}
 
-				records = append(records, UnfallBeteiligung{
+				records = append(records, data.UnfallBeteiligung{
 					Verkehrsart:     verkehrsart,
 					Kategorie:       kategorie,
 					Ortslage:        ortslage,
@@ -149,14 +138,14 @@ func ParseUnfallBeteiligungYearly() ([]UnfallBeteiligung, error) {
 	return records, nil
 }
 
-func ParseUnfallBeteiligungMonthly() ([]UnfallBeteiligung, error) {
+func ParseUnfallBeteiligungMonthly() ([]data.UnfallBeteiligung, error) {
 	file, reader, err := helper.OpenCSV("./unfallData/csv/46241-0012_de.csv")
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
 
-	var records []UnfallBeteiligung
+	var records []data.UnfallBeteiligung
 	var headers []HeaderUnfallBeteiligung
 	var geschlechtRow []string
 	var altersgruppeRow []string
@@ -266,7 +255,7 @@ func ParseUnfallBeteiligungMonthly() ([]UnfallBeteiligung, error) {
 					continue
 				}
 
-				records = append(records, UnfallBeteiligung{
+				records = append(records, data.UnfallBeteiligung{
 					Verkehrsart:     verkehrsart,
 					Kategorie:       kategorie,
 					Ortslage:        ortslage,

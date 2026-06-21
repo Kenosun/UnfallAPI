@@ -5,28 +5,18 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/Kenosun/UnfallAPI/internal/data"
 	"github.com/Kenosun/UnfallAPI/internal/parser/helper"
 )
 
-type UnfallVerunglückte struct {
-	Verkehrsart  string
-	Ortslage     string
-	Kategorie    string
-	Geschlecht   string
-	Altersgruppe string
-	Jahr         int
-	Monat        int // 1-12 for months, 0 for full year data
-	Anzahl       int
-}
-
-func ParseUnfallVerunglückteYearly() ([]UnfallVerunglückte, error) {
+func ParseUnfallVerunglückteYearly() ([]data.UnfallVerunglückte, error) {
 	file, reader, err := helper.OpenCSV("./unfallData/csv/46241-0007_de.csv")
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
 
-	var records []UnfallVerunglückte
+	var records []data.UnfallVerunglückte
 	var headers []HeaderGenderAge
 	var geschlechtRow []string
 	headerFound := false
@@ -113,7 +103,7 @@ func ParseUnfallVerunglückteYearly() ([]UnfallVerunglückte, error) {
 					continue
 				}
 
-				records = append(records, UnfallVerunglückte{
+				records = append(records, data.UnfallVerunglückte{
 					Verkehrsart:  verkehrsart,
 					Ortslage:     ortslage,
 					Kategorie:    kategorie,
@@ -130,14 +120,14 @@ func ParseUnfallVerunglückteYearly() ([]UnfallVerunglückte, error) {
 	return records, nil
 }
 
-func ParseUnfallVerunglückteMonthly() ([]UnfallVerunglückte, error) {
+func ParseUnfallVerunglückteMonthly() ([]data.UnfallVerunglückte, error) {
 	file, reader, err := helper.OpenCSV("./unfallData/csv/46241-0008_de.csv")
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
 
-	var records []UnfallVerunglückte
+	var records []data.UnfallVerunglückte
 	var headers []HeaderGenderAge
 	var geschlechtRow []string
 	headerFound := false
@@ -230,7 +220,7 @@ func ParseUnfallVerunglückteMonthly() ([]UnfallVerunglückte, error) {
 					continue
 				}
 
-				records = append(records, UnfallVerunglückte{
+				records = append(records, data.UnfallVerunglückte{
 					Verkehrsart:  verkehrsart,
 					Ortslage:     ortslage,
 					Kategorie:    kategorie,

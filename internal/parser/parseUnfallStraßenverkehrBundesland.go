@@ -5,26 +5,18 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/Kenosun/UnfallAPI/internal/data"
 	"github.com/Kenosun/UnfallAPI/internal/parser/helper"
 )
 
-type UnfallStraßenverkehrBundesland struct {
-	Bundesland    string
-	Straßenklasse string
-	Ortslage      string
-	Jahr          int
-	Monat         int // 1-12 for months, 0 for full year data
-	Anzahl        int
-}
-
-func ParseUnfallStraßenverkehrBundeslandYearly() ([]UnfallStraßenverkehrBundesland, error) {
+func ParseUnfallStraßenverkehrBundeslandYearly() ([]data.UnfallStraßenverkehrBundesland, error) {
 	file, reader, err := helper.OpenCSV("./unfallData/csv/46241-0022_de.csv")
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
 
-	var records []UnfallStraßenverkehrBundesland
+	var records []data.UnfallStraßenverkehrBundesland
 	var years []int
 	headerFound := false
 
@@ -68,7 +60,7 @@ func ParseUnfallStraßenverkehrBundeslandYearly() ([]UnfallStraßenverkehrBundes
 			}
 
 			bundesland := strings.TrimSpace(record[0])
-			strassenklasse := strings.TrimSpace(record[1])
+			straßenklasse := strings.TrimSpace(record[1])
 			ortslage := strings.TrimSpace(record[2])
 
 			// flatten the column values back to individual records per year
@@ -83,9 +75,9 @@ func ParseUnfallStraßenverkehrBundeslandYearly() ([]UnfallStraßenverkehrBundes
 					continue
 				}
 
-				records = append(records, UnfallStraßenverkehrBundesland{
+				records = append(records, data.UnfallStraßenverkehrBundesland{
 					Bundesland:    bundesland,
-					Straßenklasse: strassenklasse,
+					Straßenklasse: straßenklasse,
 					Ortslage:      ortslage,
 					Jahr:          year,
 					Monat:         0,

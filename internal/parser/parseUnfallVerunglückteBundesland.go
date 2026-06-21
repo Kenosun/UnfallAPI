@@ -5,26 +5,18 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/Kenosun/UnfallAPI/internal/data"
 	"github.com/Kenosun/UnfallAPI/internal/parser/helper"
 )
 
-type UnfallVerunglückteBundesland struct {
-	Bundesland  string
-	Ortslage    string
-	Schweregrad string
-	Jahr        int
-	Monat       int // 1-12 for months, 0 for full year data
-	Anzahl      int
-}
-
-func ParseUnfallVerunglückteBundeslandYearly() ([]UnfallVerunglückteBundesland, error) {
+func ParseUnfallVerunglückteBundeslandYearly() ([]data.UnfallVerunglückteBundesland, error) {
 	file, reader, err := helper.OpenCSV("./unfallData/csv/46241-0023_de.csv")
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
 
-	var records []UnfallVerunglückteBundesland
+	var records []data.UnfallVerunglückteBundesland
 	var years []int
 	headerFound := false
 
@@ -84,7 +76,7 @@ func ParseUnfallVerunglückteBundeslandYearly() ([]UnfallVerunglückteBundesland
 					continue
 				}
 
-				records = append(records, UnfallVerunglückteBundesland{
+				records = append(records, data.UnfallVerunglückteBundesland{
 					Bundesland:  bundesland,
 					Ortslage:    ortslage,
 					Schweregrad: schweregrad,
@@ -99,14 +91,14 @@ func ParseUnfallVerunglückteBundeslandYearly() ([]UnfallVerunglückteBundesland
 	return records, nil
 }
 
-func ParseUnfallVerunglückteBundeslandMonthly() ([]UnfallVerunglückteBundesland, error) {
+func ParseUnfallVerunglückteBundeslandMonthly() ([]data.UnfallVerunglückteBundesland, error) {
 	file, reader, err := helper.OpenCSV("./unfallData/csv/46241-0024_de.csv")
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
 
-	var records []UnfallVerunglückteBundesland
+	var records []data.UnfallVerunglückteBundesland
 	var columns []HeaderYearMonth
 	var yearRow []string
 	headerFound := false
@@ -193,7 +185,7 @@ func ParseUnfallVerunglückteBundeslandMonthly() ([]UnfallVerunglückteBundeslan
 					continue
 				}
 
-				records = append(records, UnfallVerunglückteBundesland{
+				records = append(records, data.UnfallVerunglückteBundesland{
 					Bundesland:  bundesland,
 					Ortslage:    ortslage,
 					Schweregrad: schweregrad,
