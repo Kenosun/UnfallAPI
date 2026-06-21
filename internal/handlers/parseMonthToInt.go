@@ -2,7 +2,7 @@ package handlers
 
 import "strings"
 
-func germanMonthToInt(month string) int {
+func parseMonthToInt(month string) int {
 	switch strings.ToLower(month) {
 	case "januar":
 		return 1
@@ -29,6 +29,6 @@ func germanMonthToInt(month string) int {
 	case "dezember":
 		return 12
 	default:
-		return 0
+		return -1
 	}
 }

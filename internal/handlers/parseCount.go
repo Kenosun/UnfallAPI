@@ -22,5 +22,5 @@ func parseCount(valStr string) (int, bool) {
 		return count, true
 	}
 
-	return 0, false
+	return -1, false
 }

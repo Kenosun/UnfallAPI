@@ -141,7 +141,7 @@ func ParseUnfallFehlverhaltenMonthly() ([]UnfallFehlverhalten, error) {
 				monthStr := strings.ToLower(strings.TrimSpace(record[i]))
 
 				year, yErr := strconv.Atoi(yearStr)
-				month := germanMonthToInt(monthStr)
+				month := parseMonthToInt(monthStr)
 
 				// only add valid columns where both year and month parse correctly
 				if yErr == nil && month > 0 {

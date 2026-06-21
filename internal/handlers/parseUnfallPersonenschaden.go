@@ -155,7 +155,7 @@ func ParseUnfallPersonenschadenMonthly() ([]UnfallPersonenschaden, error) {
 					lastValidYear = year
 				}
 
-				month := germanMonthToInt(monthStr)
+				month := parseMonthToInt(monthStr)
 
 				// only add valid columns where both year and month parse correctly
 				if lastValidYear != -1 && month > 0 {

@@ -110,7 +110,7 @@ func ParseUnfallBeteiligungYearly() ([]UnfallBeteiligung, error) {
 
 			year, err := strconv.Atoi(strings.TrimSpace(record[0]))
 			if err != nil {
-				continue // skip row if year doesn't parse
+				continue // skip row if year is invalid
 			}
 
 			verkehrsart := strings.TrimSpace(record[1])
@@ -239,13 +239,13 @@ func ParseUnfallBeteiligungMonthly() ([]UnfallBeteiligung, error) {
 
 			year, err := strconv.Atoi(strings.TrimSpace(record[0]))
 			if err != nil {
-				continue // skip row if year doesn't parse
+				continue // skip row if year is invalid
 			}
 
 			monthStr := strings.ToLower(strings.TrimSpace(record[1]))
-			month := germanMonthToInt(monthStr)
-			if month == 0 {
-				continue // skip if month is invalid or a summary block text
+			month := parseMonthToInt(monthStr)
+			if month == -1 {
+				continue // skip row if month is invalid
 			}
 
 			verkehrsart := strings.TrimSpace(record[2])
