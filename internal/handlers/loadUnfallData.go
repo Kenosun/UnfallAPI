@@ -20,7 +20,7 @@ const (
 )
 
 var urls = [...]string{
-	// Straßenverkehrsunfälle OpenGeodata NRW -> Unfallatlas
+	// Unfallatlas -> Straßenverkehrsunfälle OpenGeodata NRW
 	// 2024
 	"https://www.opengeodata.nrw.de/produkte/transport_verkehr/unfallatlas/Unfallorte2024_EPSG25832_CSV.zip",
 	"https://www.opengeodata.nrw.de/produkte/transport_verkehr/unfallatlas/Unfallorte2024_EPSG25832_Shape.zip",
@@ -48,15 +48,7 @@ var urls = [...]string{
 	// 2016
 	"https://www.opengeodata.nrw.de/produkte/transport_verkehr/unfallatlas/Unfallorte2016_EPSG25832_CSV.zip",
 	"https://www.opengeodata.nrw.de/produkte/transport_verkehr/unfallatlas/Unfallorte2016_EPSG25832_Shape.zip",
-	// Regionalatlas
-	// Straßenverkehrsunfälle bezogen auf EW
-	"https://www.regionalstatistik.de:443/genesis/online?operation=ergebnistabelleDownload&levelindex=1&levelid=1780507533219&option=dcsv",
-	// Straßenverkehrsunfälle bezogen auf Kfz
-	"https://www.regionalstatistik.de:443/genesis/online?operation=ergebnistabelleDownload&levelindex=1&levelid=1780507951673&option=dcsv",
-	// Getötete bei Straßenverkehrsunfällen je 100.000 EW
-	"https://www.regionalstatistik.de:443/genesis/online?operation=ergebnistabelleDownload&levelindex=1&levelid=1780508058721&option=dcsv",
-	// Gemeindeverzeichnis
-	// Quartalsausgabe als .xlsx
+	// Gemeindeverzeichnis -> Quartalsausgabe als .xlsx
 	"https://www.destatis.de/DE/Themen/Laender-Regionen/Regionales/Gemeindeverzeichnis/Administrativ/Archiv/GVAuszugQ/AuszugGV2QAktuell.xlsx?__blob=publicationFile&v=13",
 }
 
