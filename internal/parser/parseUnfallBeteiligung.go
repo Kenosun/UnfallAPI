@@ -17,7 +17,7 @@ func ParseUnfallBeteiligungYearly() ([]data.UnfallBeteiligung, error) {
 	defer file.Close()
 
 	var records []data.UnfallBeteiligung
-	var headers []HeaderUnfallBeteiligung
+	var headers []data.HeaderUnfallBeteiligung
 	var geschlechtRow []string
 	var altersgruppeRow []string
 	headerFound := false
@@ -78,13 +78,13 @@ func ParseUnfallBeteiligungYearly() ([]data.UnfallBeteiligung, error) {
 					}
 
 					if lastValidGeschlecht != "" && lastValidAltersgruppe != "" && bStr != "" {
-						headers = append(headers, HeaderUnfallBeteiligung{
+						headers = append(headers, data.HeaderUnfallBeteiligung{
 							Geschlecht:      lastValidGeschlecht,
 							Altersgruppe:    lastValidAltersgruppe,
 							Beteiligungsart: bStr,
 						})
 					} else {
-						headers = append(headers, HeaderUnfallBeteiligung{Geschlecht: "Unknown", Altersgruppe: "Unknown", Beteiligungsart: "Unknown"})
+						headers = append(headers, data.HeaderUnfallBeteiligung{Geschlecht: "Unknown", Altersgruppe: "Unknown", Beteiligungsart: "Unknown"})
 					}
 				}
 				headerFound = true
@@ -146,7 +146,7 @@ func ParseUnfallBeteiligungMonthly() ([]data.UnfallBeteiligung, error) {
 	defer file.Close()
 
 	var records []data.UnfallBeteiligung
-	var headers []HeaderUnfallBeteiligung
+	var headers []data.HeaderUnfallBeteiligung
 	var geschlechtRow []string
 	var altersgruppeRow []string
 	headerFound := false
@@ -207,13 +207,13 @@ func ParseUnfallBeteiligungMonthly() ([]data.UnfallBeteiligung, error) {
 					}
 
 					if lastValidGeschlecht != "" && lastValidAltersgruppe != "" && bStr != "" {
-						headers = append(headers, HeaderUnfallBeteiligung{
+						headers = append(headers, data.HeaderUnfallBeteiligung{
 							Geschlecht:      lastValidGeschlecht,
 							Altersgruppe:    lastValidAltersgruppe,
 							Beteiligungsart: bStr,
 						})
 					} else {
-						headers = append(headers, HeaderUnfallBeteiligung{Geschlecht: "Unknown", Altersgruppe: "Unknown", Beteiligungsart: "Unknown"})
+						headers = append(headers, data.HeaderUnfallBeteiligung{Geschlecht: "Unknown", Altersgruppe: "Unknown", Beteiligungsart: "Unknown"})
 					}
 				}
 				headerFound = true

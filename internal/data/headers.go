@@ -1,4 +1,4 @@
-package parser
+package data
 
 type HeaderYearMonth struct {
 	Year  int

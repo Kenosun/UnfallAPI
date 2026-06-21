@@ -17,7 +17,7 @@ func ParseUnfallVerunglückteYearly() ([]data.UnfallVerunglückte, error) {
 	defer file.Close()
 
 	var records []data.UnfallVerunglückte
-	var headers []HeaderGenderAge
+	var headers []data.HeaderGenderAge
 	var geschlechtRow []string
 	headerFound := false
 
@@ -62,12 +62,12 @@ func ParseUnfallVerunglückteYearly() ([]data.UnfallVerunglückte, error) {
 				}
 
 				if lastValidGeschlecht != "" && aStr != "" {
-					headers = append(headers, HeaderGenderAge{
+					headers = append(headers, data.HeaderGenderAge{
 						Geschlecht:   lastValidGeschlecht,
 						Altersgruppe: aStr,
 					})
 				} else {
-					headers = append(headers, HeaderGenderAge{Geschlecht: "Unknown", Altersgruppe: "Unknown"})
+					headers = append(headers, data.HeaderGenderAge{Geschlecht: "Unknown", Altersgruppe: "Unknown"})
 				}
 			}
 			headerFound = true
@@ -128,7 +128,7 @@ func ParseUnfallVerunglückteMonthly() ([]data.UnfallVerunglückte, error) {
 	defer file.Close()
 
 	var records []data.UnfallVerunglückte
-	var headers []HeaderGenderAge
+	var headers []data.HeaderGenderAge
 	var geschlechtRow []string
 	headerFound := false
 
@@ -173,12 +173,12 @@ func ParseUnfallVerunglückteMonthly() ([]data.UnfallVerunglückte, error) {
 				}
 
 				if lastValidGeschlecht != "" && aStr != "" {
-					headers = append(headers, HeaderGenderAge{
+					headers = append(headers, data.HeaderGenderAge{
 						Geschlecht:   lastValidGeschlecht,
 						Altersgruppe: aStr,
 					})
 				} else {
-					headers = append(headers, HeaderGenderAge{Geschlecht: "Unknown", Altersgruppe: "Unknown"})
+					headers = append(headers, data.HeaderGenderAge{Geschlecht: "Unknown", Altersgruppe: "Unknown"})
 				}
 			}
 			headerFound = true

@@ -99,7 +99,7 @@ func ParseUnfallStraßenverkehrMonthly() ([]data.UnfallStraßenverkehr, error) {
 	defer file.Close()
 
 	var records []data.UnfallStraßenverkehr
-	var columns []HeaderYearMonth
+	var columns []data.HeaderYearMonth
 	var yearRow []string
 	headerFound := false
 
@@ -149,10 +149,10 @@ func ParseUnfallStraßenverkehrMonthly() ([]data.UnfallStraßenverkehr, error) {
 
 				// only add valid columns where both year and month parse correctly
 				if lastValidYear != -1 && month > 0 {
-					columns = append(columns, HeaderYearMonth{Year: lastValidYear, Month: month})
+					columns = append(columns, data.HeaderYearMonth{Year: lastValidYear, Month: month})
 				} else {
 					// add a placeholder if columns don't align
-					columns = append(columns, HeaderYearMonth{Year: -1, Month: -1})
+					columns = append(columns, data.HeaderYearMonth{Year: -1, Month: -1})
 				}
 			}
 			headerFound = true

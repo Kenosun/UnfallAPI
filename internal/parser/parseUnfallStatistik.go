@@ -96,7 +96,7 @@ func ParseUnfallStatistikMonthly() ([]data.UnfallStatistik, error) {
 	defer file.Close()
 
 	var records []data.UnfallStatistik
-	var columns []HeaderYearMonth
+	var columns []data.HeaderYearMonth
 	var yearRow []string
 	headerFound := false
 
@@ -140,10 +140,10 @@ func ParseUnfallStatistikMonthly() ([]data.UnfallStatistik, error) {
 
 				// only add valid columns where both year and month parse correctly
 				if yErr == nil && month > 0 {
-					columns = append(columns, HeaderYearMonth{Year: year, Month: month})
+					columns = append(columns, data.HeaderYearMonth{Year: year, Month: month})
 				} else {
 					// add a placeholder if columns don't align
-					columns = append(columns, HeaderYearMonth{Year: -1, Month: -1})
+					columns = append(columns, data.HeaderYearMonth{Year: -1, Month: -1})
 				}
 			}
 			headerFound = true
