@@ -9,14 +9,14 @@ import (
 	"github.com/Kenosun/UnfallAPI/internal/parser/helper"
 )
 
-func ParseUnfallVerunglückteBundeslandYearly() ([]data.UnfallVerunglückteBundesland, error) {
+func ParseUnfallVerunglueckteBundeslandYearly() ([]data.UnfallVerunglueckteBundesland, error) {
 	file, reader, err := helper.OpenCSV("./unfallData/csv/46241-0023_de.csv")
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
 
-	var records []data.UnfallVerunglückteBundesland
+	var records []data.UnfallVerunglueckteBundesland
 	var years []int
 	headerFound := false
 
@@ -76,7 +76,7 @@ func ParseUnfallVerunglückteBundeslandYearly() ([]data.UnfallVerunglückteBunde
 					continue
 				}
 
-				records = append(records, data.UnfallVerunglückteBundesland{
+				records = append(records, data.UnfallVerunglueckteBundesland{
 					Bundesland:  bundesland,
 					Ortslage:    ortslage,
 					Schweregrad: schweregrad,
@@ -91,14 +91,14 @@ func ParseUnfallVerunglückteBundeslandYearly() ([]data.UnfallVerunglückteBunde
 	return records, nil
 }
 
-func ParseUnfallVerunglückteBundeslandMonthly() ([]data.UnfallVerunglückteBundesland, error) {
+func ParseUnfallVerunglueckteBundeslandMonthly() ([]data.UnfallVerunglueckteBundesland, error) {
 	file, reader, err := helper.OpenCSV("./unfallData/csv/46241-0024_de.csv")
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
 
-	var records []data.UnfallVerunglückteBundesland
+	var records []data.UnfallVerunglueckteBundesland
 	var columns []data.HeaderYearMonth
 	var yearRow []string
 	headerFound := false
@@ -185,7 +185,7 @@ func ParseUnfallVerunglückteBundeslandMonthly() ([]data.UnfallVerunglückteBund
 					continue
 				}
 
-				records = append(records, data.UnfallVerunglückteBundesland{
+				records = append(records, data.UnfallVerunglueckteBundesland{
 					Bundesland:  bundesland,
 					Ortslage:    ortslage,
 					Schweregrad: schweregrad,

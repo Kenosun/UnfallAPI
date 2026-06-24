@@ -9,14 +9,14 @@ import (
 	"github.com/Kenosun/UnfallAPI/internal/parser/helper"
 )
 
-func ParseUnfallStraßenverkehrYearly() ([]data.UnfallStraßenverkehr, error) {
+func ParseUnfallStrassenverkehrYearly() ([]data.UnfallStrassenverkehr, error) {
 	file, reader, err := helper.OpenCSV("./unfallData/csv/46241-0003_de.csv")
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
 
-	var records []data.UnfallStraßenverkehr
+	var records []data.UnfallStrassenverkehr
 	var years []int
 	headerFound := false
 
@@ -60,7 +60,7 @@ func ParseUnfallStraßenverkehrYearly() ([]data.UnfallStraßenverkehr, error) {
 				continue
 			}
 
-			straßenklasse := strings.TrimSpace(record[0])
+			strassenklasse := strings.TrimSpace(record[0])
 			ortslage := strings.TrimSpace(record[1])
 			kategorie := strings.TrimSpace(record[2])
 
@@ -76,13 +76,13 @@ func ParseUnfallStraßenverkehrYearly() ([]data.UnfallStraßenverkehr, error) {
 					continue
 				}
 
-				records = append(records, data.UnfallStraßenverkehr{
-					Straßenklasse: straßenklasse,
-					Ortslage:      ortslage,
-					Kategorie:     kategorie,
-					Jahr:          year,
-					Monat:         0,
-					Anzahl:        count,
+				records = append(records, data.UnfallStrassenverkehr{
+					Strassenklasse: strassenklasse,
+					Ortslage:       ortslage,
+					Kategorie:      kategorie,
+					Jahr:           year,
+					Monat:          0,
+					Anzahl:         count,
 				})
 			}
 		}
@@ -91,14 +91,14 @@ func ParseUnfallStraßenverkehrYearly() ([]data.UnfallStraßenverkehr, error) {
 	return records, nil
 }
 
-func ParseUnfallStraßenverkehrMonthly() ([]data.UnfallStraßenverkehr, error) {
+func ParseUnfallStrassenverkehrMonthly() ([]data.UnfallStrassenverkehr, error) {
 	file, reader, err := helper.OpenCSV("./unfallData/csv/46241-0004_de.csv")
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
 
-	var records []data.UnfallStraßenverkehr
+	var records []data.UnfallStrassenverkehr
 	var columns []data.HeaderYearMonth
 	var yearRow []string
 	headerFound := false
@@ -166,7 +166,7 @@ func ParseUnfallStraßenverkehrMonthly() ([]data.UnfallStraßenverkehr, error) {
 				continue
 			}
 
-			straßenklasse := strings.TrimSpace(record[0])
+			strassenklasse := strings.TrimSpace(record[0])
 			ortslage := strings.TrimSpace(record[1])
 			kategorie := strings.TrimSpace(record[2])
 
@@ -186,13 +186,13 @@ func ParseUnfallStraßenverkehrMonthly() ([]data.UnfallStraßenverkehr, error) {
 					continue
 				}
 
-				records = append(records, data.UnfallStraßenverkehr{
-					Straßenklasse: straßenklasse,
-					Ortslage:      ortslage,
-					Kategorie:     kategorie,
-					Jahr:          colInfo.Year,
-					Monat:         colInfo.Month,
-					Anzahl:        count,
+				records = append(records, data.UnfallStrassenverkehr{
+					Strassenklasse: strassenklasse,
+					Ortslage:       ortslage,
+					Kategorie:      kategorie,
+					Jahr:           colInfo.Year,
+					Monat:          colInfo.Month,
+					Anzahl:         count,
 				})
 			}
 		}

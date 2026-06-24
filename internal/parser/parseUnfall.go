@@ -68,7 +68,10 @@ func ParseUnfall(filePath string) ([]data.Unfall, error) {
 		// parse integer field (defaults to -1 on failure)
 		parseInt := func(fieldName string) int {
 			if idx, ok := headerMap[fieldName]; ok && idx < len(record) {
-				val, _ := strconv.Atoi(strings.TrimSpace(record[idx]))
+				val, err := strconv.Atoi(strings.TrimSpace(record[idx]))
+				if err != nil {
+					return -1
+				}
 				return val
 			}
 			return -1
@@ -86,7 +89,10 @@ func ParseUnfall(filePath string) ([]data.Unfall, error) {
 		parseFloat := func(fieldName string) float64 {
 			if idx, ok := headerMap[fieldName]; ok && idx < len(record) {
 				valStr := strings.ReplaceAll(strings.TrimSpace(record[idx]), ",", ".")
-				val, _ := strconv.ParseFloat(valStr, 64)
+				val, err := strconv.ParseFloat(valStr, 64)
+				if err != nil {
+					return -1.0
+				}
 				return val
 			}
 			return -1.0
@@ -124,15 +130,14 @@ func ParseUnfall(filePath string) ([]data.Unfall, error) {
 			Schweregrad:                helper.ParseSchweregrad(parseInt("UKATEGORIE")),
 			Unfallart:                  helper.ParseUnfallart(parseInt("UART")),
 			Unfalltyp:                  helper.ParseUnfalltyp(parseInt("UTYP1")),
-			Lichtverhältnis:            helper.ParseLichtverhältnis(parseIntWithHeaderVariation("ULICHTVERH", "LICHT")),
+			Lichtverhaeltnis:           helper.ParseLichtverhaeltnis(parseIntWithHeaderVariation("ULICHTVERH", "LICHT")),
 			MitFahrrad:                 parseBool("ISTRAD"),
 			MitPKW:                     parseBool("ISTPKW"),
-			MitFußgänger:               parseBool("ISTFUSS"),
+			MitFussgaenger:             parseBool("ISTFUSS"),
 			MitKraftrad:                parseBool("ISTKRAD"),
-			MitGüterkraftfahrzeug:      parseBool("ISTGKFZ"),
+			MitGueterkraftfahrzeug:     parseBool("ISTGKFZ"),
 			MitSonstigenVerkehrsmittel: parseBoolWithHeaderVariation("ISTSONSTIGE", "ISTSONSTIG"),
-			IstStraße:                  parseBool("ISTSTRASSE"),
-			Straßenzustand:             helper.ParseStraßenzustand(parseIntWithHeaderVariation("STRZUSTAND", "ISTSTRASSENZUSTAND")),
+			Strassenzustand:            helper.ParseStrassenzustand(parseIntWithHeaderVariation("STRZUSTAND", "ISTSTRASSENZUSTAND", "ISTSTRASSE")),
 			Latitude:                   parseFloat("YGCSWGS84"),
 			Longitude:                  parseFloat("XGCSWGS84"),
 		}

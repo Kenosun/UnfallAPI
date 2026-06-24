@@ -9,9 +9,25 @@ import (
 	"github.com/xuri/excelize/v2"
 )
 
-func normalizeValue(val string) string {
-	val = strings.ReplaceAll(val, " ", "")      // remove spaces
-	val = strings.ReplaceAll(val, "\u00a0", "") // handle non-breaking spaces
+func normalizeString(s string) string {
+	s = strings.ReplaceAll(s, " ", "")      // remove spaces
+	s = strings.ReplaceAll(s, "\u00a0", "") // handle non-breaking spaces
+	return s
+}
+
+func parseInt(s string) int {
+	val, err := strconv.Atoi(normalizeString(s))
+	if err != nil {
+		return -1
+	}
+	return val
+}
+
+func parseFloat(s string) float64 {
+	val, err := strconv.ParseFloat(normalizeString(s), 64)
+	if err != nil {
+		return -1.0
+	}
 	return val
 }
 
@@ -62,42 +78,42 @@ func ParseOrt() ([]data.Ort, error) {
 			continue
 		}
 
-		// ensure the row has enough columns to avoid out-of-bounds panics (verstädterung is at index 19)
+		// ensure the row has enough columns to avoid out-of-bounds panics (verstaedterung is at index 19)
 		if len(row) < 20 {
 			continue
 		}
 
 		// swap decimal commas (,) with dots (.)
-		flächeStr := strings.ReplaceAll(normalizeValue(row[8]), ",", ".")
-		longStr := strings.ReplaceAll(normalizeValue(row[14]), ",", ".")
-		latStr := strings.ReplaceAll(normalizeValue(row[15]), ",", ".")
+		flaecheStr := strings.ReplaceAll(normalizeString(row[8]), ",", ".")
+		longitudeStr := strings.ReplaceAll(normalizeString(row[14]), ",", ".")
+		latitudeStr := strings.ReplaceAll(normalizeString(row[15]), ",", ".")
 
 		// parse data
-		fläche, _ := strconv.ParseFloat(flächeStr, 64)
-		bevölkerung, _ := strconv.Atoi(normalizeValue(row[9]))
-		männlich, _ := strconv.Atoi(normalizeValue(row[10]))
-		weiblich, _ := strconv.Atoi(normalizeValue(row[11]))
-		longitude, _ := strconv.ParseFloat(longStr, 64)
-		latitude, _ := strconv.ParseFloat(latStr, 64)
+		flaeche := parseFloat(flaecheStr)
+		bevoelkerung := parseInt((row[9]))
+		maennlich := parseInt((row[10]))
+		weiblich := parseInt((row[11]))
+		longitude := parseFloat(longitudeStr)
+		latitude := parseFloat(latitudeStr)
 
 		// map columns to the struct
 		ort := data.Ort{
-			Bundesland:         helper.ParseBundesland(row[2]),
-			Regierungsbezirk:   strings.TrimSpace(row[3]),
-			Kreis:              strings.TrimSpace(row[4]),
-			Gemeinde:           strings.TrimSpace(row[6]),
-			Name:               strings.TrimSpace(row[7]),
-			Gemeindeverband:    gemeindeverband,
-			Landkreis:          landkreis,
-			Postleitzahl:       strings.TrimSpace(row[13]),
-			Fläche:             fläche,
-			Bevölkerung:        bevölkerung,
-			Männlich:           männlich,
-			Weiblich:           weiblich,
-			Reisegebiet:        strings.TrimSpace(row[17]),
-			Verstädterungsgrad: strings.TrimSpace(row[19]),
-			Latitude:           latitude,
-			Longitude:          longitude,
+			Bundesland:          helper.ParseBundesland(row[2]),
+			Regierungsbezirk:    strings.TrimSpace(row[3]),
+			Kreis:               strings.TrimSpace(row[4]),
+			Gemeinde:            strings.TrimSpace(row[6]),
+			Name:                strings.TrimSpace(row[7]),
+			Gemeindeverband:     gemeindeverband,
+			Landkreis:           landkreis,
+			Postleitzahl:        strings.TrimSpace(row[13]),
+			Flaeche:             flaeche,
+			Bevoelkerung:        bevoelkerung,
+			Maennlich:           maennlich,
+			Weiblich:            weiblich,
+			Reisegebiet:         strings.TrimSpace(row[17]),
+			Verstaedterungsgrad: strings.TrimSpace(row[19]),
+			Latitude:            latitude,
+			Longitude:           longitude,
 		}
 
 		orte = append(orte, ort)

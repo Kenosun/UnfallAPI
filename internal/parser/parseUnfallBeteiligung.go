@@ -105,7 +105,7 @@ func ParseUnfallBeteiligungYearly() ([]data.UnfallBeteiligung, error) {
 			}
 
 			verkehrsart := strings.TrimSpace(record[1])
-			kategorie := strings.TrimSpace(record[2])
+			unfallkategorie := strings.TrimSpace(record[2])
 			ortslage := strings.TrimSpace(record[3])
 
 			// flatten columns using headers slice
@@ -122,7 +122,7 @@ func ParseUnfallBeteiligungYearly() ([]data.UnfallBeteiligung, error) {
 
 				records = append(records, data.UnfallBeteiligung{
 					Verkehrsart:     verkehrsart,
-					Kategorie:       kategorie,
+					Unfallkategorie: unfallkategorie,
 					Ortslage:        ortslage,
 					Geschlecht:      header.Geschlecht,
 					Altersgruppe:    header.Altersgruppe,
@@ -240,7 +240,7 @@ func ParseUnfallBeteiligungMonthly() ([]data.UnfallBeteiligung, error) {
 			}
 
 			verkehrsart := strings.TrimSpace(record[2])
-			kategorie := strings.TrimSpace(record[3])
+			unfallkategorie := strings.TrimSpace(record[3])
 			ortslage := strings.TrimSpace(record[4])
 
 			// flatten columns using headers slice
@@ -257,7 +257,7 @@ func ParseUnfallBeteiligungMonthly() ([]data.UnfallBeteiligung, error) {
 
 				records = append(records, data.UnfallBeteiligung{
 					Verkehrsart:     verkehrsart,
-					Kategorie:       kategorie,
+					Unfallkategorie: unfallkategorie,
 					Ortslage:        ortslage,
 					Geschlecht:      header.Geschlecht,
 					Altersgruppe:    header.Altersgruppe,

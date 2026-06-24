@@ -1,20 +1,20 @@
 package data
 
 type UnfallStatistik struct {
-	Kategorie string `json:"kategorie"`
-	Ortslage  string `json:"ortslage"`
-	Jahr      int    `json:"jahr"`
-	Monat     int    `json:"monat"` // 1-12 for months, 0 for full year data
-	Anzahl    int    `json:"anzahl"`
+	Unfallkategorie string `json:"unfallkategorie"`
+	Ortslage        string `json:"ortslage"`
+	Jahr            int    `json:"jahr"`
+	Monat           int    `json:"monat"` // 1-12 for months, 0 for full year data
+	Anzahl          int    `json:"anzahl"`
 }
 
-type UnfallStraßenverkehr struct {
-	Straßenklasse string `json:"straßenklasse"`
-	Ortslage      string `json:"ortslage"`
-	Kategorie     string `json:"kategorie"`
-	Jahr          int    `json:"jahr"`
-	Monat         int    `json:"monat"` // 1-12 for months, 0 for full year data
-	Anzahl        int    `json:"anzahl"`
+type UnfallStrassenverkehr struct {
+	Strassenklasse string `json:"strassenklasse"`
+	Ortslage       string `json:"ortslage"`
+	Kategorie      string `json:"kategorie"`
+	Jahr           int    `json:"jahr"`
+	Monat          int    `json:"monat"` // 1-12 for months, 0 for full year data
+	Anzahl         int    `json:"anzahl"`
 }
 
 type UnfallPersonenschaden struct {
@@ -27,10 +27,10 @@ type UnfallPersonenschaden struct {
 	Anzahl      int    `json:"anzahl"`
 }
 
-type UnfallVerunglückte struct {
+type UnfallVerunglueckte struct {
 	Verkehrsart  string `json:"verkehrsart"`
 	Ortslage     string `json:"ortslage"`
-	Kategorie    string `json:"kategorie"`
+	Schweregrad  string `json:"schweregrad"`
 	Geschlecht   string `json:"geschlecht"`
 	Altersgruppe string `json:"altersgruppe"`
 	Jahr         int    `json:"jahr"`
@@ -39,16 +39,16 @@ type UnfallVerunglückte struct {
 }
 
 type UnfallFehlverhalten struct {
-	Verkehrsart string `json:"verkehrsart"`
-	Kategorie   string `json:"kategorie"`
-	Jahr        int    `json:"jahr"`
-	Monat       int    `json:"monat"` // 1-12 for months, 0 for full year data
-	Anzahl      int    `json:"anzahl"`
+	Verkehrsart   string `json:"verkehrsart"`
+	Fehlverhalten string `json:"fehlverhalten"`
+	Jahr          int    `json:"jahr"`
+	Monat         int    `json:"monat"` // 1-12 for months, 0 for full year data
+	Anzahl        int    `json:"anzahl"`
 }
 
 type UnfallBeteiligung struct {
 	Verkehrsart     string `json:"verkehrsart"`
-	Kategorie       string `json:"kategorie"`
+	Unfallkategorie string `json:"unfallkategorie"`
 	Ortslage        string `json:"ortslage"`
 	Geschlecht      string `json:"geschlecht"`
 	Altersgruppe    string `json:"altersgruppe"`
@@ -59,24 +59,23 @@ type UnfallBeteiligung struct {
 }
 
 type UnfallStatistikBundesland struct {
-	Bundesland string `json:"bundesland"`
-	Kategorie  string `json:"kategorie"`
-	Ortslage   string `json:"ortslage"`
-	Jahr       int    `json:"jahr"`
-	Monat      int    `json:"monat"` // 1-12 for months, 0 for full year data
-	Anzahl     int    `json:"anzahl"`
+	Bundesland      string `json:"bundesland"`
+	Unfallkategorie string `json:"unfallkategorie"`
+	Ortslage        string `json:"ortslage"`
+	Jahr            int    `json:"jahr"`
+	Monat           int    `json:"monat"` // 1-12 for months, 0 for full year data
+	Anzahl          int    `json:"anzahl"`
 }
 
-type UnfallStraßenverkehrBundesland struct {
-	Bundesland    string `json:"bundesland"`
-	Straßenklasse string `json:"straßenklasse"`
-	Ortslage      string `json:"ortslage"`
-	Jahr          int    `json:"jahr"`
-	Monat         int    `json:"monat"` // 1-12 for months, 0 for full year data
-	Anzahl        int    `json:"anzahl"`
+type UnfallStrassenverkehrBundesland struct {
+	Bundesland     string `json:"bundesland"`
+	Strassenklasse string `json:"strassenklasse"`
+	Ortslage       string `json:"ortslage"`
+	Jahr           int    `json:"jahr"`
+	Anzahl         int    `json:"anzahl"`
 }
 
-type UnfallVerunglückteBundesland struct {
+type UnfallVerunglueckteBundesland struct {
 	Bundesland  string `json:"bundesland"`
 	Ortslage    string `json:"ortslage"`
 	Schweregrad string `json:"schweregrad"`
@@ -84,6 +83,7 @@ type UnfallVerunglückteBundesland struct {
 	Monat       int    `json:"monat"` // 1-12 for months, 0 for full year data
 	Anzahl      int    `json:"anzahl"`
 }
+
 type Unfall struct {
 	Bundesland                 string  `json:"bundesland"`
 	Regierungsbezirk           string  `json:"regierungsbezirk"`
@@ -96,34 +96,33 @@ type Unfall struct {
 	Schweregrad                string  `json:"schweregrad"`
 	Unfallart                  string  `json:"unfallart"`
 	Unfalltyp                  string  `json:"unfalltyp"`
-	Lichtverhältnis            string  `json:"lichtverhältnis"`
+	Lichtverhaeltnis           string  `json:"lichtverhaeltnis"`
 	MitFahrrad                 bool    `json:"mit_fahrrad"`
 	MitPKW                     bool    `json:"mit_pkw"`
-	MitFußgänger               bool    `json:"mit_fußgänger"`
+	MitFussgaenger             bool    `json:"mit_fussgaenger"`
 	MitKraftrad                bool    `json:"mit_kraftrad"`
-	MitGüterkraftfahrzeug      bool    `json:"mit_güterkraftfahrzeug"`
+	MitGueterkraftfahrzeug     bool    `json:"mit_gueterkraftfahrzeug"`
 	MitSonstigenVerkehrsmittel bool    `json:"mit_sonstigen_verkehrsmittel"`
-	IstStraße                  bool    `json:"ist_straße"`
-	Straßenzustand             string  `json:"straßenzustand"`
+	Strassenzustand            string  `json:"strassenzustand"`
 	Latitude                   float64 `json:"latitude"`
 	Longitude                  float64 `json:"longitude"`
 }
 
 type Ort struct {
-	Bundesland         string  `json:"bundesland"`
-	Regierungsbezirk   string  `json:"regierungsbezirk"`
-	Kreis              string  `json:"kreis"`
-	Gemeinde           string  `json:"gemeinde"`
-	Name               string  `json:"name"`
-	Gemeindeverband    string  `json:"gemeindeverband"`
-	Landkreis          string  `json:"landkreis"`
-	Postleitzahl       string  `json:"postleitzahl"`
-	Fläche             float64 `json:"fläche"`
-	Bevölkerung        int     `json:"bevölkerung"`
-	Männlich           int     `json:"männlich"`
-	Weiblich           int     `json:"weiblich"`
-	Reisegebiet        string  `json:"reisegebiet"`
-	Verstädterungsgrad string  `json:"verstädterungsgrad"`
-	Latitude           float64 `json:"latitude"`
-	Longitude          float64 `json:"longitude"`
+	Bundesland          string  `json:"bundesland"`
+	Regierungsbezirk    string  `json:"regierungsbezirk"`
+	Kreis               string  `json:"kreis"`
+	Gemeinde            string  `json:"gemeinde"`
+	Name                string  `json:"name"`
+	Gemeindeverband     string  `json:"gemeindeverband"`
+	Landkreis           string  `json:"landkreis"`
+	Postleitzahl        string  `json:"postleitzahl"`
+	Flaeche             float64 `json:"flaeche"`
+	Bevoelkerung        int     `json:"bevoelkerung"`
+	Maennlich           int     `json:"maennlich"`
+	Weiblich            int     `json:"weiblich"`
+	Reisegebiet         string  `json:"reisegebiet"`
+	Verstaedterungsgrad string  `json:"verstaedterungsgrad"`
+	Latitude            float64 `json:"latitude"`
+	Longitude           float64 `json:"longitude"`
 }

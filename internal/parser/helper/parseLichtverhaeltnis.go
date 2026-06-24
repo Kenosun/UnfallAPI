@@ -1,6 +1,6 @@
 package helper
 
-func ParseLichtverhältnis(num int) string {
+func ParseLichtverhaeltnis(num int) string {
 	switch num {
 	case 0:
 		return "Tageslicht"

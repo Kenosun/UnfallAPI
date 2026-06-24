@@ -60,7 +60,7 @@ func ParseUnfallFehlverhaltenYearly() ([]data.UnfallFehlverhalten, error) {
 			}
 
 			verkehrsart := strings.TrimSpace(record[0])
-			kategorie := strings.TrimSpace(record[1])
+			fehlverhalten := strings.TrimSpace(record[1])
 
 			// flatten the column values back to individual records per year
 			for i, year := range years {
@@ -75,11 +75,11 @@ func ParseUnfallFehlverhaltenYearly() ([]data.UnfallFehlverhalten, error) {
 				}
 
 				records = append(records, data.UnfallFehlverhalten{
-					Verkehrsart: verkehrsart,
-					Kategorie:   kategorie,
-					Jahr:        year,
-					Monat:       0,
-					Anzahl:      count,
+					Verkehrsart:   verkehrsart,
+					Fehlverhalten: fehlverhalten,
+					Jahr:          year,
+					Monat:         0,
+					Anzahl:        count,
 				})
 			}
 		}
@@ -158,7 +158,7 @@ func ParseUnfallFehlverhaltenMonthly() ([]data.UnfallFehlverhalten, error) {
 			}
 
 			verkehrsart := strings.TrimSpace(record[0])
-			kategorie := strings.TrimSpace(record[1])
+			fehlverhalten := strings.TrimSpace(record[1])
 
 			// iterate through columns
 			for i, colInfo := range columns {
@@ -177,11 +177,11 @@ func ParseUnfallFehlverhaltenMonthly() ([]data.UnfallFehlverhalten, error) {
 				}
 
 				records = append(records, data.UnfallFehlverhalten{
-					Verkehrsart: verkehrsart,
-					Kategorie:   kategorie,
-					Jahr:        colInfo.Year,
-					Monat:       colInfo.Month,
-					Anzahl:      count,
+					Verkehrsart:   verkehrsart,
+					Fehlverhalten: fehlverhalten,
+					Jahr:          colInfo.Year,
+					Monat:         colInfo.Month,
+					Anzahl:        count,
 				})
 			}
 		}

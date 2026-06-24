@@ -9,14 +9,14 @@ import (
 	"github.com/Kenosun/UnfallAPI/internal/parser/helper"
 )
 
-func ParseUnfallVerunglückteYearly() ([]data.UnfallVerunglückte, error) {
+func ParseUnfallVerunglueckteYearly() ([]data.UnfallVerunglueckte, error) {
 	file, reader, err := helper.OpenCSV("./unfallData/csv/46241-0007_de.csv")
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
 
-	var records []data.UnfallVerunglückte
+	var records []data.UnfallVerunglueckte
 	var headers []data.HeaderGenderAge
 	var geschlechtRow []string
 	headerFound := false
@@ -89,7 +89,7 @@ func ParseUnfallVerunglückteYearly() ([]data.UnfallVerunglückte, error) {
 
 			verkehrsart := strings.TrimSpace(record[1])
 			ortslage := strings.TrimSpace(record[2])
-			kategorie := strings.TrimSpace(record[3])
+			schweregrad := strings.TrimSpace(record[3])
 
 			// flatten columns using headers slice
 			for i, header := range headers {
@@ -103,10 +103,10 @@ func ParseUnfallVerunglückteYearly() ([]data.UnfallVerunglückte, error) {
 					continue
 				}
 
-				records = append(records, data.UnfallVerunglückte{
+				records = append(records, data.UnfallVerunglueckte{
 					Verkehrsart:  verkehrsart,
 					Ortslage:     ortslage,
-					Kategorie:    kategorie,
+					Schweregrad:  schweregrad,
 					Geschlecht:   header.Geschlecht,
 					Altersgruppe: header.Altersgruppe,
 					Jahr:         year,
@@ -120,14 +120,14 @@ func ParseUnfallVerunglückteYearly() ([]data.UnfallVerunglückte, error) {
 	return records, nil
 }
 
-func ParseUnfallVerunglückteMonthly() ([]data.UnfallVerunglückte, error) {
+func ParseUnfallVerunglueckteMonthly() ([]data.UnfallVerunglueckte, error) {
 	file, reader, err := helper.OpenCSV("./unfallData/csv/46241-0008_de.csv")
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
 
-	var records []data.UnfallVerunglückte
+	var records []data.UnfallVerunglueckte
 	var headers []data.HeaderGenderAge
 	var geschlechtRow []string
 	headerFound := false
@@ -206,7 +206,7 @@ func ParseUnfallVerunglückteMonthly() ([]data.UnfallVerunglückte, error) {
 
 			verkehrsart := strings.TrimSpace(record[2])
 			ortslage := strings.TrimSpace(record[3])
-			kategorie := strings.TrimSpace(record[4])
+			schweregrad := strings.TrimSpace(record[4])
 
 			// flatten columns using headers slice
 			for i, header := range headers {
@@ -220,10 +220,10 @@ func ParseUnfallVerunglückteMonthly() ([]data.UnfallVerunglückte, error) {
 					continue
 				}
 
-				records = append(records, data.UnfallVerunglückte{
+				records = append(records, data.UnfallVerunglueckte{
 					Verkehrsart:  verkehrsart,
 					Ortslage:     ortslage,
-					Kategorie:    kategorie,
+					Schweregrad:  schweregrad,
 					Geschlecht:   header.Geschlecht,
 					Altersgruppe: header.Altersgruppe,
 					Jahr:         year,

@@ -59,7 +59,7 @@ func ParseUnfallStatistikYearly() ([]data.UnfallStatistik, error) {
 				continue
 			}
 
-			kategorie := strings.TrimSpace(record[0])
+			unfallkategorie := strings.TrimSpace(record[0])
 			ortslage := strings.TrimSpace(record[1])
 
 			// flatten the column values back to individual records per year
@@ -75,11 +75,11 @@ func ParseUnfallStatistikYearly() ([]data.UnfallStatistik, error) {
 				}
 
 				records = append(records, data.UnfallStatistik{
-					Kategorie: kategorie,
-					Ortslage:  ortslage,
-					Jahr:      year,
-					Monat:     0,
-					Anzahl:    count,
+					Unfallkategorie: unfallkategorie,
+					Ortslage:        ortslage,
+					Jahr:            year,
+					Monat:           0,
+					Anzahl:          count,
 				})
 			}
 		}
@@ -157,7 +157,7 @@ func ParseUnfallStatistikMonthly() ([]data.UnfallStatistik, error) {
 				continue
 			}
 
-			kategorie := strings.TrimSpace(record[0])
+			unfallkategorie := strings.TrimSpace(record[0])
 			ortslage := strings.TrimSpace(record[1])
 
 			// iterate through columns
@@ -177,11 +177,11 @@ func ParseUnfallStatistikMonthly() ([]data.UnfallStatistik, error) {
 				}
 
 				records = append(records, data.UnfallStatistik{
-					Kategorie: kategorie,
-					Ortslage:  ortslage,
-					Jahr:      colInfo.Year,
-					Monat:     colInfo.Month,
-					Anzahl:    count,
+					Unfallkategorie: unfallkategorie,
+					Ortslage:        ortslage,
+					Jahr:            colInfo.Year,
+					Monat:           colInfo.Month,
+					Anzahl:          count,
 				})
 			}
 		}
