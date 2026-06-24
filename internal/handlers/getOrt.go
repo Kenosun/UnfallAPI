@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -28,10 +29,10 @@ import (
 // @Param        max_flaeche            query    float64  false  "Filter nach Maximalfläche"
 // @Param        min_bevoelkerung       query    int      false  "Filter nach Mindestbevölkerung"
 // @Param        max_bevoelkerung       query    int      false  "Filter nach Maximalbevölkerung"
-// @Param        min_maennlich          query    int      false  "Filter nach Mindestanzahl männlich"
-// @Param        max_maennlich          query    int      false  "Filter nach Maximalanzahl männlich"
-// @Param        min_weiblich           query    int      false  "Filter nach Mindestanzahl weiblich"
-// @Param        max_weiblich           query    int      false  "Filter nach Maximalanzahl weiblich"
+// @Param        min_maennlich          query    int      false  "Filter nach Mindestbevölkerung (männlich)"
+// @Param        max_maennlich          query    int      false  "Filter nach Maximalbevölkerung (männlich)"
+// @Param        min_weiblich           query    int      false  "Filter nach Mindestbevölkerung (weiblich)"
+// @Param        max_weiblich           query    int      false  "Filter nach Maximalbevölkerung (weiblich)"
 // @Param        reisegebiet    		query    string   false  "Filter nach Reisegebiet"
 // @Param        verstaedterungsgrad 	query    string   false  "Filter nach Verstädterungsgrad" enums(dicht besiedelt, mittlere Besiedlungsdichte, gering besiedelt)
 // @Param        min_lat          		query    float64  false  "Minimum Latitude"
@@ -55,11 +56,7 @@ func (h *AccidentHandler) GetOrt(c *gin.Context) {
 		"regierungsbezirk":    c.Query("regierungsbezirk"),
 		"kreis":               c.Query("kreis"),
 		"gemeinde":            c.Query("gemeinde"),
-		"name":                c.Query("name"),
-		"gemeindeverband":     c.Query("gemeindeverband"),
-		"landkreis":           c.Query("landkreis"),
 		"postleitzahl":        c.Query("postleitzahl"),
-		"reisegebiet":         c.Query("reisegebiet"),
 		"verstaedterungsgrad": c.Query("verstaedterungsgrad"),
 	}
 
@@ -67,6 +64,21 @@ func (h *AccidentHandler) GetOrt(c *gin.Context) {
 		if value != "" {
 			whereClauses = append(whereClauses, column+" = ?")
 			queryArgs = append(queryArgs, value)
+		}
+	}
+
+	// partial-match string parameters using LIKE
+	likeParams := map[string]string{
+		"name":            c.Query("name"),
+		"gemeindeverband": c.Query("gemeindeverband"),
+		"landkreis":       c.Query("landkreis"),
+		"reisegebiet":     c.Query("reisegebiet"),
+	}
+
+	for column, value := range likeParams {
+		if value != "" {
+			whereClauses = append(whereClauses, column+" LIKE ?")
+			queryArgs = append(queryArgs, fmt.Sprintf("%%%s%%", value))
 		}
 	}
 
