@@ -33,3 +33,6 @@ go.work.sum
 
 # UnfallData
 unfallData/
+unfallData.db
+unfallData.db-shm
+unfallData.db-wal
