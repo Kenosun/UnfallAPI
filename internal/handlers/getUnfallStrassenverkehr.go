@@ -96,3 +96,39 @@ func (h *AccidentHandler) GetUnfallStrassenverkehr(c *gin.Context) {
 
 	c.JSON(http.StatusOK, results)
 }
+
+// GetUnfallStrassenverkehrJahre godoc
+//
+// @Summary      Verfügbare Jahre abrufen
+// @Description  Gibt alle Jahre zurück, für die Daten vorhanden sind.
+// @Tags         GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)
+// @Produce      json
+// @Success      200         {object}  YearsResponse
+// @Failure      500         {object}  HTTPError "Internal Server Error - Database execution or scanning failure"
+// @Router       /unfallStrassenverkehr/jahre [get]
+func (h *AccidentHandler) GetUnfallStrassenverkehrJahre(c *gin.Context) {
+	query := `SELECT DISTINCT jahr FROM unfall_strassenverkehr ORDER BY jahr`
+	rows, err := h.DB.Query(query)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, HTTPError{Error: err.Error()})
+		return
+	}
+	defer rows.Close()
+
+	var years []int
+	for rows.Next() {
+		var year int
+		if err := rows.Scan(&year); err != nil {
+			c.JSON(http.StatusInternalServerError, HTTPError{Error: err.Error()})
+			return
+		}
+		years = append(years, year)
+	}
+
+	if err = rows.Err(); err != nil {
+		c.JSON(http.StatusInternalServerError, HTTPError{Error: err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, YearsResponse{Years: years})
+}

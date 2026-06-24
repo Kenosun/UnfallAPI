@@ -236,6 +236,15 @@ definitions:
         example: invalid parameter format
         type: string
     type: object
+  handlers.YearsResponse:
+    properties:
+      jahre:
+        example:
+        - 2022
+        items:
+          type: integer
+        type: array
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -567,6 +576,23 @@ paths:
       summary: Detalierte Verkehrsunfälle mit Personenschaden im Unfallatlas abrufen
       tags:
       - Unfallatlas
+  /unfall/jahre:
+    get:
+      description: Gibt alle Jahre zurück, für die Daten vorhanden sind.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.YearsResponse'
+        "500":
+          description: Internal Server Error - Database execution or scanning failure
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+      summary: Verfügbare Jahre abrufen
+      tags:
+      - Unfallatlas
   /unfallBeteiligung:
     get:
       consumes:
@@ -672,6 +698,23 @@ paths:
       summary: Unfallbeteiligte, Hauptverursacher des Unfalls abrufen
       tags:
       - GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)
+  /unfallBeteiligung/jahre:
+    get:
+      description: Gibt alle Jahre zurück, für die Daten vorhanden sind.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.YearsResponse'
+        "500":
+          description: Internal Server Error - Database execution or scanning failure
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+      summary: Verfügbare Jahre abrufen
+      tags:
+      - GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)
   /unfallFehlverhalten:
     get:
       consumes:
@@ -730,6 +773,23 @@ paths:
           schema:
             $ref: '#/definitions/handlers.HTTPError'
       summary: Fehlverhalten bei Unfällen mit Personenschaden abrufen
+      tags:
+      - GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)
+  /unfallFehlverhalten/jahre:
+    get:
+      description: Gibt alle Jahre zurück, für die Daten vorhanden sind.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.YearsResponse'
+        "500":
+          description: Internal Server Error - Database execution or scanning failure
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+      summary: Verfügbare Jahre abrufen
       tags:
       - GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)
   /unfallPersonenschaden:
@@ -803,6 +863,23 @@ paths:
       summary: Unfälle mit Personenschaden abrufen
       tags:
       - GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)
+  /unfallPersonenschaden/jahre:
+    get:
+      description: Gibt alle Jahre zurück, für die Daten vorhanden sind.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.YearsResponse'
+        "500":
+          description: Internal Server Error - Database execution or scanning failure
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+      summary: Verfügbare Jahre abrufen
+      tags:
+      - GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)
   /unfallStatistik:
     get:
       consumes:
@@ -853,6 +930,23 @@ paths:
           schema:
             $ref: '#/definitions/handlers.HTTPError'
       summary: Unfälle (polizeilich erfasste) abrufen
+      tags:
+      - GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)
+  /unfallStatistik/jahre:
+    get:
+      description: Gibt alle Jahre zurück, für die Daten vorhanden sind.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.YearsResponse'
+        "500":
+          description: Internal Server Error - Database execution or scanning failure
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+      summary: Verfügbare Jahre abrufen
       tags:
       - GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)
   /unfallStatistikBundesland:
@@ -928,6 +1022,23 @@ paths:
       summary: Unfälle (polizeilich erfasste) nach Bundesland abrufen
       tags:
       - GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)
+  /unfallStatistikBundesland/jahre:
+    get:
+      description: Gibt alle Jahre zurück, für die Daten vorhanden sind.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.YearsResponse'
+        "500":
+          description: Internal Server Error - Database execution or scanning failure
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+      summary: Verfügbare Jahre abrufen
+      tags:
+      - GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)
   /unfallStrassenverkehr:
     get:
       consumes:
@@ -992,6 +1103,23 @@ paths:
           schema:
             $ref: '#/definitions/handlers.HTTPError'
       summary: Straßenverkehrsunfälle mit Personenschaden abrufen
+      tags:
+      - GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)
+  /unfallStrassenverkehr/jahre:
+    get:
+      description: Gibt alle Jahre zurück, für die Daten vorhanden sind.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.YearsResponse'
+        "500":
+          description: Internal Server Error - Database execution or scanning failure
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+      summary: Verfügbare Jahre abrufen
       tags:
       - GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)
   /unfallStrassenverkehrBundesland:
@@ -1063,6 +1191,23 @@ paths:
           schema:
             $ref: '#/definitions/handlers.HTTPError'
       summary: Straßenverkehrsunfälle mit Personenschaden nach Bundesland abrufen
+      tags:
+      - GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)
+  /unfallStrassenverkehrBundesland/jahre:
+    get:
+      description: Gibt alle Jahre zurück, für die Daten vorhanden sind.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.YearsResponse'
+        "500":
+          description: Internal Server Error - Database execution or scanning failure
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+      summary: Verfügbare Jahre abrufen
       tags:
       - GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)
   /unfallVerunglueckte:
@@ -1162,6 +1307,23 @@ paths:
       summary: Verunglückte abrufen
       tags:
       - GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)
+  /unfallVerunglueckte/jahre:
+    get:
+      description: Gibt alle Jahre zurück, für die Daten vorhanden sind.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.YearsResponse'
+        "500":
+          description: Internal Server Error - Database execution or scanning failure
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+      summary: Verfügbare Jahre abrufen
+      tags:
+      - GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)
   /unfallVerunglueckteBundesland:
     get:
       consumes:
@@ -1232,6 +1394,23 @@ paths:
           schema:
             $ref: '#/definitions/handlers.HTTPError'
       summary: Verunglückte nach Bundesland abrufen
+      tags:
+      - GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)
+  /unfallVerunglueckteBundesland/jahre:
+    get:
+      description: Gibt alle Jahre zurück, für die Daten vorhanden sind.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.YearsResponse'
+        "500":
+          description: Internal Server Error - Database execution or scanning failure
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+      summary: Verfügbare Jahre abrufen
       tags:
       - GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)
 swagger: "2.0"

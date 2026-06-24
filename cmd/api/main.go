@@ -67,15 +67,35 @@ func main() {
 	api := r.Group("/api/v1")
 	{
 		api.GET("/unfallStatistik", h.GetUnfallStatistik)
+		api.GET("/unfallStatistik/jahre", h.GetUnfallStatistikJahre)
+
 		api.GET("/unfallStrassenverkehr", h.GetUnfallStrassenverkehr)
+		api.GET("/unfallStrassenverkehr/jahre", h.GetUnfallStrassenverkehrJahre)
+
 		api.GET("/unfallPersonenschaden", h.GetUnfallPersonenschaden)
+		api.GET("/unfallPersonenschaden/jahre", h.GetUnfallPersonenschadenJahre)
+
 		api.GET("/unfallVerunglueckte", h.GetUnfallVerunglueckte)
+		api.GET("/unfallVerunglueckte/jahre", h.GetUnfallVerunglueckteJahre)
+
 		api.GET("/unfallFehlverhalten", h.GetUnfallFehlverhalten)
+		api.GET("/unfallFehlverhalten/jahre", h.GetUnfallFehlverhaltenJahre)
+
 		api.GET("/unfallBeteiligung", h.GetUnfallBeteiligung)
+		api.GET("/unfallBeteiligung/jahre", h.GetUnfallBeteiligungJahre)
+
 		api.GET("/unfallStatistikBundesland", h.GetUnfallStatistikBundesland)
+		api.GET("/unfallStatistikBundesland/jahre", h.GetUnfallStatistikBundeslandJahre)
+
 		api.GET("/unfallStrassenverkehrBundesland", h.GetUnfallStrassenverkehrBundesland)
+		api.GET("/unfallStrassenverkehrBundesland/jahre", h.GetUnfallStrassenverkehrBundeslandJahre)
+
 		api.GET("/unfallVerunglueckteBundesland", h.GetUnfallVerunglueckteBundesland)
+		api.GET("/unfallVerunglueckteBundesland/jahre", h.GetUnfallVerunglueckteBundeslandJahre)
+
 		api.GET("/unfall", h.GetUnfall)
+		api.GET("/unfall/jahre", h.GetUnfallJahre)
+
 		api.GET("/ort", h.GetOrt)
 	}
 

@@ -463,6 +463,32 @@ const docTemplate = `{
                 }
             }
         },
+        "/unfall/jahre": {
+            "get": {
+                "description": "Gibt alle Jahre zurück, für die Daten vorhanden sind.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Unfallatlas"
+                ],
+                "summary": "Verfügbare Jahre abrufen",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.YearsResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error - Database execution or scanning failure",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
         "/unfallBeteiligung": {
             "get": {
                 "description": "(46241-0011/46241-0012) Unfallbeteiligte, Hauptverursacher des Unfalls: Deutschland, Jahre, Monate, Geschlecht, Altersgruppen, Art der Verkehrsbeteiligung, Unfallkategorie, Ortslage",
@@ -600,6 +626,32 @@ const docTemplate = `{
                 }
             }
         },
+        "/unfallBeteiligung/jahre": {
+            "get": {
+                "description": "Gibt alle Jahre zurück, für die Daten vorhanden sind.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)"
+                ],
+                "summary": "Verfügbare Jahre abrufen",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.YearsResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error - Database execution or scanning failure",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
         "/unfallFehlverhalten": {
             "get": {
                 "description": "(46241-0009/46241-0010) Unfallbeteiligte: Deutschland, Jahre, Monate, Art der Verkehrsbeteiligung, Fehlverhalten der Fahrzeugführer und Fußgänger bei Unfällen mit Personenschaden",
@@ -670,6 +722,32 @@ const docTemplate = `{
                         "description": "Bad Request - Invalid parameter type or range",
                         "schema": {
                             "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error - Database execution or scanning failure",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/unfallFehlverhalten/jahre": {
+            "get": {
+                "description": "Gibt alle Jahre zurück, für die Daten vorhanden sind.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)"
+                ],
+                "summary": "Verfügbare Jahre abrufen",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.YearsResponse"
                         }
                     },
                     "500": {
@@ -779,6 +857,32 @@ const docTemplate = `{
                 }
             }
         },
+        "/unfallPersonenschaden/jahre": {
+            "get": {
+                "description": "Gibt alle Jahre zurück, für die Daten vorhanden sind.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)"
+                ],
+                "summary": "Verfügbare Jahre abrufen",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.YearsResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error - Database execution or scanning failure",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
         "/unfallStatistik": {
             "get": {
                 "description": "(46241-0001/46241-0002) Unfälle (polizeilich erfasste): Deutschland, Jahre, Monate, Unfallkategorie, Ortslage",
@@ -841,6 +945,32 @@ const docTemplate = `{
                         "description": "Bad Request - Invalid parameter type or range",
                         "schema": {
                             "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error - Database execution or scanning failure",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/unfallStatistik/jahre": {
+            "get": {
+                "description": "Gibt alle Jahre zurück, für die Daten vorhanden sind.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)"
+                ],
+                "summary": "Verfügbare Jahre abrufen",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.YearsResponse"
                         }
                     },
                     "500": {
@@ -949,6 +1079,32 @@ const docTemplate = `{
                 }
             }
         },
+        "/unfallStatistikBundesland/jahre": {
+            "get": {
+                "description": "Gibt alle Jahre zurück, für die Daten vorhanden sind.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)"
+                ],
+                "summary": "Verfügbare Jahre abrufen",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.YearsResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error - Database execution or scanning failure",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
         "/unfallStrassenverkehr": {
             "get": {
                 "description": "(46241-0003/46241-0004) Straßenverkehrsunfälle mit Personenschaden, Getöteten, Schwer- und Leichtverletzten: Deutschland, Jahre, Monate, Straßenklasse, Ortslage",
@@ -1029,6 +1185,32 @@ const docTemplate = `{
                         "description": "Bad Request - Invalid parameter type or range",
                         "schema": {
                             "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error - Database execution or scanning failure",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/unfallStrassenverkehr/jahre": {
+            "get": {
+                "description": "Gibt alle Jahre zurück, für die Daten vorhanden sind.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)"
+                ],
+                "summary": "Verfügbare Jahre abrufen",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.YearsResponse"
                         }
                     },
                     "500": {
@@ -1124,6 +1306,32 @@ const docTemplate = `{
                         "description": "Bad Request - Invalid parameter type or range",
                         "schema": {
                             "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error - Database execution or scanning failure",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/unfallStrassenverkehrBundesland/jahre": {
+            "get": {
+                "description": "Gibt alle Jahre zurück, für die Daten vorhanden sind.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)"
+                ],
+                "summary": "Verfügbare Jahre abrufen",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.YearsResponse"
                         }
                     },
                     "500": {
@@ -1261,6 +1469,32 @@ const docTemplate = `{
                 }
             }
         },
+        "/unfallVerunglueckte/jahre": {
+            "get": {
+                "description": "Gibt alle Jahre zurück, für die Daten vorhanden sind.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)"
+                ],
+                "summary": "Verfügbare Jahre abrufen",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.YearsResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error - Database execution or scanning failure",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
         "/unfallVerunglueckteBundesland": {
             "get": {
                 "description": "(46241-0023/46241-0024) Verunglückte: Bundesländer, Jahre, Monate, Ortslage, Schwere der Verletzung",
@@ -1346,6 +1580,32 @@ const docTemplate = `{
                         "description": "Bad Request - Invalid parameter type or range",
                         "schema": {
                             "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error - Database execution or scanning failure",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/unfallVerunglueckteBundesland/jahre": {
+            "get": {
+                "description": "Gibt alle Jahre zurück, für die Daten vorhanden sind.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)"
+                ],
+                "summary": "Verfügbare Jahre abrufen",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.YearsResponse"
                         }
                     },
                     "500": {
@@ -1711,6 +1971,20 @@ const docTemplate = `{
                 "error": {
                     "type": "string",
                     "example": "invalid parameter format"
+                }
+            }
+        },
+        "handlers.YearsResponse": {
+            "type": "object",
+            "properties": {
+                "jahre": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    },
+                    "example": [
+                        2022
+                    ]
                 }
             }
         }
