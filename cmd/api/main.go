@@ -80,6 +80,7 @@ func main() {
 
 		api.GET("/unfallFehlverhalten", h.GetUnfallFehlverhalten)
 		api.GET("/unfallFehlverhalten/jahre", h.GetUnfallFehlverhaltenJahre)
+		api.GET("/unfallFehlverhalten/kategorien", h.GetUnfallFehlverhaltenKategorien)
 
 		api.GET("/unfallBeteiligung", h.GetUnfallBeteiligung)
 		api.GET("/unfallBeteiligung/jahre", h.GetUnfallBeteiligungJahre)

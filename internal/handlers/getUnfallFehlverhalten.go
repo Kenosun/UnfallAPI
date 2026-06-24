@@ -130,3 +130,40 @@ func (h *AccidentHandler) GetUnfallFehlverhaltenJahre(c *gin.Context) {
 
 	c.JSON(http.StatusOK, YearsResponse{Years: years})
 }
+
+// GetUnfallFehlverhaltenKategorien godoc
+//
+// @Summary      Verfügbare Kategorien von Fehlverhalten abrufen
+// @Description  Gibt eine Liste aller Fehlverhalten-Kategorien zurück (ohne Duplikate).
+// @Tags         GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)
+// @Produce      json
+// @Success      200         {array}   string
+// @Failure      500         {object}  HTTPError "Internal Server Error - Database execution or scanning failure"
+// @Router       /unfallFehlverhalten/kategorien [get]
+func (h *AccidentHandler) GetUnfallFehlverhaltenKategorien(c *gin.Context) {
+	query := `SELECT DISTINCT fehlverhalten FROM unfall_fehlverhalten WHERE fehlverhalten IS NOT NULL AND fehlverhalten != '' ORDER BY fehlverhalten`
+
+	rows, err := h.DB.Query(query)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, HTTPError{Error: err.Error()})
+		return
+	}
+	defer rows.Close()
+
+	var kategorien []string
+	for rows.Next() {
+		var art string
+		if err := rows.Scan(&art); err != nil {
+			c.JSON(http.StatusInternalServerError, HTTPError{Error: err.Error()})
+			return
+		}
+		kategorien = append(kategorien, art)
+	}
+
+	if err = rows.Err(); err != nil {
+		c.JSON(http.StatusInternalServerError, HTTPError{Error: err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, kategorien)
+}

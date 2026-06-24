@@ -327,19 +327,19 @@ paths:
         in: query
         name: max_bevoelkerung
         type: integer
-      - description: Filter nach Mindestanzahl männlich
+      - description: Filter nach Mindestbevölkerung (männlich)
         in: query
         name: min_maennlich
         type: integer
-      - description: Filter nach Maximalanzahl männlich
+      - description: Filter nach Maximalbevölkerung (männlich)
         in: query
         name: max_maennlich
         type: integer
-      - description: Filter nach Mindestanzahl weiblich
+      - description: Filter nach Mindestbevölkerung (weiblich)
         in: query
         name: min_weiblich
         type: integer
-      - description: Filter nach Maximalanzahl weiblich
+      - description: Filter nach Maximalbevölkerung (weiblich)
         in: query
         name: max_weiblich
         type: integer
@@ -790,6 +790,25 @@ paths:
           schema:
             $ref: '#/definitions/handlers.HTTPError'
       summary: Verfügbare Jahre abrufen
+      tags:
+      - GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)
+  /unfallFehlverhalten/kategorien:
+    get:
+      description: Gibt eine Liste aller Fehlverhalten-Kategorien zurück (ohne Duplikate).
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: string
+            type: array
+        "500":
+          description: Internal Server Error - Database execution or scanning failure
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+      summary: Verfügbare Arten von Fehlverhalten abrufen
       tags:
       - GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)
   /unfallPersonenschaden:

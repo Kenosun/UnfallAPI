@@ -123,25 +123,25 @@ const docTemplate = `{
                     },
                     {
                         "type": "integer",
-                        "description": "Filter nach Mindestanzahl männlich",
+                        "description": "Filter nach Mindestbevölkerung (männlich)",
                         "name": "min_maennlich",
                         "in": "query"
                     },
                     {
                         "type": "integer",
-                        "description": "Filter nach Maximalanzahl männlich",
+                        "description": "Filter nach Maximalbevölkerung (männlich)",
                         "name": "max_maennlich",
                         "in": "query"
                     },
                     {
                         "type": "integer",
-                        "description": "Filter nach Mindestanzahl weiblich",
+                        "description": "Filter nach Mindestbevölkerung (weiblich)",
                         "name": "min_weiblich",
                         "in": "query"
                     },
                     {
                         "type": "integer",
-                        "description": "Filter nach Maximalanzahl weiblich",
+                        "description": "Filter nach Maximalbevölkerung (weiblich)",
                         "name": "max_weiblich",
                         "in": "query"
                     },
@@ -748,6 +748,35 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/handlers.YearsResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error - Database execution or scanning failure",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/unfallFehlverhalten/kategorien": {
+            "get": {
+                "description": "Gibt eine Liste aller Fehlverhalten-Kategorien zurück (ohne Duplikate).",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)"
+                ],
+                "summary": "Verfügbare Arten von Fehlverhalten abrufen",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
                         }
                     },
                     "500": {
