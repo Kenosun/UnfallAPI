@@ -15,36 +15,1343 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/users/{id}": {
+        "/ort": {
             "get": {
-                "description": "Returns a single user",
+                "description": "Strukturierte Daten über Bundes­länder, Regierungs­bezirke, Kreise, Gemeindeverbände und Gemeinden abrufen inklusive Bevölkerung, Fläche, und Geokoordinaten.",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "users"
+                    "Gemeindeverzeichnis des Statistischen Bundesamtes"
                 ],
-                "summary": "Get user by ID",
+                "summary": "Detaillierte Ortsdaten im Gemeindeverzeichnis abrufen",
                 "parameters": [
                     {
+                        "enum": [
+                            "Baden-Württemberg",
+                            "Bayern",
+                            "Berlin",
+                            "Brandenburg",
+                            "Bremen",
+                            "Hamburg",
+                            "Hessen",
+                            "Mecklenburg-Vorpommern",
+                            "Niedersachsen",
+                            "Nordrhein-Westfalen",
+                            "Rheinland-Pfalz",
+                            "Saarland",
+                            "Sachsen",
+                            "Sachsen-Anhalt",
+                            "Schleswig-Holstein",
+                            "Thüringen"
+                        ],
                         "type": "string",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
+                        "description": "Filter nach Bundesland",
+                        "name": "bundesland",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter nach Regierungsbezirk (Amtlicher Gemeindeschlüssel)",
+                        "name": "regierungsbezirk",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter nach Kreis (Amtlicher Gemeindeschlüssel)",
+                        "name": "kreis",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter nach Gemeinde (Amtlicher Gemeindeschlüssel)",
+                        "name": "gemeinde",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter nach Ortsname",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter nach Gemeindeverband",
+                        "name": "gemeindeverband",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter nach Landkreis",
+                        "name": "landkreis",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter nach Postleitzahl",
+                        "name": "postleitzahl",
+                        "in": "query"
+                    },
+                    {
+                        "type": "number",
+                        "format": "float64",
+                        "description": "Filter nach Mindestfläche",
+                        "name": "min_flaeche",
+                        "in": "query"
+                    },
+                    {
+                        "type": "number",
+                        "format": "float64",
+                        "description": "Filter nach Maximalfläche",
+                        "name": "max_flaeche",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Filter nach Mindestbevölkerung",
+                        "name": "min_bevoelkerung",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Filter nach Maximalbevölkerung",
+                        "name": "max_bevoelkerung",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Filter nach Mindestanzahl männlich",
+                        "name": "min_maennlich",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Filter nach Maximalanzahl männlich",
+                        "name": "max_maennlich",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Filter nach Mindestanzahl weiblich",
+                        "name": "min_weiblich",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Filter nach Maximalanzahl weiblich",
+                        "name": "max_weiblich",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter nach Reisegebiet",
+                        "name": "reisegebiet",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "dicht besiedelt",
+                            "mittlere Besiedlungsdichte",
+                            "gering besiedelt"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Verstädterungsgrad",
+                        "name": "verstaedterungsgrad",
+                        "in": "query"
+                    },
+                    {
+                        "type": "number",
+                        "format": "float64",
+                        "description": "Minimum Latitude",
+                        "name": "min_lat",
+                        "in": "query"
+                    },
+                    {
+                        "type": "number",
+                        "format": "float64",
+                        "description": "Maximum Latitude",
+                        "name": "max_lat",
+                        "in": "query"
+                    },
+                    {
+                        "type": "number",
+                        "format": "float64",
+                        "description": "Minimum Longitude",
+                        "name": "min_lon",
+                        "in": "query"
+                    },
+                    {
+                        "type": "number",
+                        "format": "float64",
+                        "description": "Maximum Longitude",
+                        "name": "max_lon",
+                        "in": "query"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/handlers.User"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/data.Ort"
+                            }
                         }
                     },
-                    "404": {
-                        "description": "Not Found",
+                    "400": {
+                        "description": "Bad Request - Invalid parameter type or range",
                         "schema": {
-                            "$ref": "#/definitions/handlers.ErrorResponse"
+                            "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error - Database execution or scanning failure",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/unfall": {
+            "get": {
+                "description": "Detaillierte, punktgenaue Daten zu Straßenverkehrsunfällen inklusive Geokoordinaten und Unfallumständen abrufen",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Unfallatlas"
+                ],
+                "summary": "Detalierte Verkehrsunfälle mit Personenschaden im Unfallatlas abrufen",
+                "parameters": [
+                    {
+                        "enum": [
+                            "Baden-Württemberg",
+                            "Bayern",
+                            "Berlin",
+                            "Brandenburg",
+                            "Bremen",
+                            "Hamburg",
+                            "Hessen",
+                            "Mecklenburg-Vorpommern",
+                            "Niedersachsen",
+                            "Nordrhein-Westfalen",
+                            "Rheinland-Pfalz",
+                            "Saarland",
+                            "Sachsen",
+                            "Sachsen-Anhalt",
+                            "Schleswig-Holstein",
+                            "Thüringen"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Bundesland",
+                        "name": "bundesland",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter nach Regierungsbezirk (Amtlicher Gemeindeschlüssel)",
+                        "name": "regierungsbezirk",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter nach Kreis (Amtlicher Gemeindeschlüssel)",
+                        "name": "kreis",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter nach Gemeinde (Amtlicher Gemeindeschlüssel)",
+                        "name": "gemeinde",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Filter nach Jahr",
+                        "name": "jahr",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 12,
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "Filter nach Monat (1-12)",
+                        "name": "monat",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter nach Uhrzeit (xx:00 Uhr)",
+                        "name": "uhrzeit",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "Montag",
+                            "Dienstag",
+                            "Mittwoch",
+                            "Donnerstag",
+                            "Freitag",
+                            "Samstag",
+                            "Sonntag"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Wochentag",
+                        "name": "wochentag",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "Unfall mit Getöteten",
+                            "Unfall mit Schwerverletzten",
+                            "Unfall mit Leichtverletzten"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Schweregrad",
+                        "name": "schweregrad",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "Zusammenstoß mit anfahrendem/anhaltendem/ruhendem Fahrzeug",
+                            "Zusammenstoß mit vorausfahrendem/wartendem Fahrzeug",
+                            "Zusammenstoß mit seitlich in gleicher Richtung fahrendem Fahrzeug",
+                            "Zusammenstoß mit entgegenkommendem Fahrzeug",
+                            "Zusammenstoß mit einbiegendem/kreuzendem Fahrzeug",
+                            "Zusammenstoß zwischen Fahrzeug und Fußgänger",
+                            "Aufprall auf Fahrbahnhindernis",
+                            "Abkommen von Fahrbahn nach rechts",
+                            "Abkommen von Fahrbahn nach links",
+                            "Unfall anderer Art"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Unfallart",
+                        "name": "unfallart",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "Fahrunfall",
+                            "Abbiegeunfall",
+                            "Einbiegen/Kreuzen-Unfall",
+                            "Überschreiten-Unfall",
+                            "Unfall durch ruhenden Verkehr",
+                            "Unfall im Längsverkehr",
+                            "sonstiger Unfall"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Unfalltyp",
+                        "name": "unfalltyp",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "Tageslicht",
+                            "Dämmerung",
+                            "Dunkelheit"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Lichtverhätltnis",
+                        "name": "lichtverhaeltnis",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Beteiligung von Fahrrädern (true/false)",
+                        "name": "mit_fahrrad",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Beteiligung von PKWs (true/false)",
+                        "name": "mit_pkw",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Beteiligung von Fußgängern (true/false)",
+                        "name": "mit_fussgaenger",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Beteiligung von Kraftfahrzeugen (true/false)",
+                        "name": "mit_kraftrad",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Beteiligung von Güterkraftfahrzeugen (true/false)",
+                        "name": "mit_gueterkraftfahrzeug",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Beteiligung von sonstigen Verkehrsmitteln (true/false)",
+                        "name": "mit_sonstigen_verkehrsmittel",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "trocken",
+                            "nass/feucht/schlüpfrig",
+                            "winterglatt"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Straßenzustand",
+                        "name": "strassenzustand",
+                        "in": "query"
+                    },
+                    {
+                        "type": "number",
+                        "format": "float64",
+                        "description": "Minimum Latitude",
+                        "name": "min_lat",
+                        "in": "query"
+                    },
+                    {
+                        "type": "number",
+                        "format": "float64",
+                        "description": "Maximum Latitude",
+                        "name": "max_lat",
+                        "in": "query"
+                    },
+                    {
+                        "type": "number",
+                        "format": "float64",
+                        "description": "Minimum Longitude",
+                        "name": "min_lon",
+                        "in": "query"
+                    },
+                    {
+                        "type": "number",
+                        "format": "float64",
+                        "description": "Maximum Longitude",
+                        "name": "max_lon",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/data.Unfall"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - Invalid parameter type or range",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error - Database execution or scanning failure",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/unfallBeteiligung": {
+            "get": {
+                "description": "(46241-0011/46241-0012) Unfallbeteiligte, Hauptverursacher des Unfalls: Deutschland, Jahre, Monate, Geschlecht, Altersgruppen, Art der Verkehrsbeteiligung, Unfallkategorie, Ortslage",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)"
+                ],
+                "summary": "Unfallbeteiligte, Hauptverursacher des Unfalls abrufen",
+                "parameters": [
+                    {
+                        "enum": [
+                            "Kraftrad mit Versicherungskennzeichen",
+                            "Kraftrad mit amtlichem Kennzeichen",
+                            "Elektrokleinstfahrzeuge",
+                            "Personenkraftwagen",
+                            "Kraftomnibus",
+                            "Güterkraftfahrzeug",
+                            "Landwirtschaftliche Zugmaschine",
+                            "Übrige Kraftfahrzeuge",
+                            "Fahrrad ohne Hilfsmotor",
+                            "Pedelecs",
+                            "Andere Fahrzeuge",
+                            "Fußgänger",
+                            "Andere Personen",
+                            "Insgesamt"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Art der Verkehrsbeteiligung",
+                        "name": "verkehrsart",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "Unfälle mit Personenschaden",
+                            "Schwerwiegende Unfälle mit Sachschaden i.e.S",
+                            "Sonst. Unfälle unter dem Einfluss berausch. Mittel",
+                            "Übrige Sachschadensunfälle",
+                            "Insgesamt"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Unfallkategorie",
+                        "name": "unfallkategorie",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter nach Ortslage (innerorts, außerorts (ohne Autobahnen), auf Autobahnen, Insgesamt)",
+                        "name": "ortslage",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "männlich",
+                            "weiblich",
+                            "Ohne Angabe",
+                            "Insgesamt"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Geschlecht",
+                        "name": "geschlecht",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "unter 15 Jahre",
+                            "15 bis unter 18 Jahre",
+                            "18 bis unter 21 Jahre",
+                            "21 bis unter 25 Jahre",
+                            "25 bis unter 35 Jahre",
+                            "35 bis unter 45 Jahre",
+                            "45 bis unter 55 Jahre",
+                            "55 bis unter 65 Jahre",
+                            "65 bis unter 75 Jahre",
+                            "75 Jahre und mehr",
+                            "Alter unbekannt",
+                            "Insgesamt"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Altersgruppe",
+                        "name": "altersgruppe",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "Unfallbeteiligte",
+                            "Hauptverursacher des Unfalls"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Beteiligungsart",
+                        "name": "beteiligungsart",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Filter nach Jahr",
+                        "name": "jahr",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 12,
+                        "minimum": 0,
+                        "type": "integer",
+                        "description": "Filter nach Monat (1-12, 0 für Ganzjahresdaten)",
+                        "name": "monat",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/data.UnfallBeteiligung"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - Invalid parameter type or range",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error - Database execution or scanning failure",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/unfallFehlverhalten": {
+            "get": {
+                "description": "(46241-0009/46241-0010) Unfallbeteiligte: Deutschland, Jahre, Monate, Art der Verkehrsbeteiligung, Fehlverhalten der Fahrzeugführer und Fußgänger bei Unfällen mit Personenschaden",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)"
+                ],
+                "summary": "Fehlverhalten bei Unfällen mit Personenschaden abrufen",
+                "parameters": [
+                    {
+                        "enum": [
+                            "Kraftrad mit Versicherungskennzeichen",
+                            "Kraftrad mit amtlichem Kennzeichen",
+                            "Elektrokleinstfahrzeuge",
+                            "Personenkraftwagen",
+                            "Kraftomnibus",
+                            "Güterkraftfahrzeug",
+                            "Landwirtschaftliche Zugmaschine",
+                            "Übrige Kraftfahrzeuge",
+                            "Fahrrad ohne Hilfsmotor",
+                            "Pedelecs",
+                            "Andere Fahrzeuge",
+                            "Fußgänger",
+                            "Andere Personen"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Art der Verkehrsbeteiligung",
+                        "name": "verkehrsart",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter nach Fehlverhalten",
+                        "name": "fehlverhalten",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Filter nach Jahr",
+                        "name": "jahr",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 12,
+                        "minimum": 0,
+                        "type": "integer",
+                        "description": "Filter nach Monat (1-12, 0 für Ganzjahresdaten)",
+                        "name": "monat",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/data.UnfallFehlverhalten"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - Invalid parameter type or range",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error - Database execution or scanning failure",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/unfallPersonenschaden": {
+            "get": {
+                "description": "(46241-0005/46241-0006) Unfälle mit Personenschaden, Verunglückte: Deutschland, Jahre, Monate, Unfalltyp/Unfallart, Ortslage, Schwere der Verletzung",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)"
+                ],
+                "summary": "Unfälle mit Personenschaden abrufen",
+                "parameters": [
+                    {
+                        "enum": [
+                            "Fahrunfall",
+                            "Abbiege-Unfall",
+                            "Einbiegen/Kreuzen-Unfall",
+                            "Überschreiten-Unfall",
+                            "Unfall durch ruhenden Verkehr",
+                            "Unfall im Längsverkehr",
+                            "Sonstiger Unfall",
+                            "Insgesamt"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Unfalltyp",
+                        "name": "unfalltyp",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter nach Ortslage (innerorts, außerorts (ohne Autobahnen), auf Autobahnen, Insgesamt)",
+                        "name": "ortslage",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "Getötete",
+                            "Schwerverletzte",
+                            "Leichtverletzte",
+                            "Insgesamt"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Schweregrad",
+                        "name": "schweregrad",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "Unfälle mit Personenschaden",
+                            "Verunglückte"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Kategorie",
+                        "name": "kategorie",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Filter nach Jahr",
+                        "name": "jahr",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 12,
+                        "minimum": 0,
+                        "type": "integer",
+                        "description": "Filter nach Monat (1-12, 0 für Ganzjahresdaten)",
+                        "name": "monat",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/data.UnfallPersonenschaden"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - Invalid parameter type or range",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error - Database execution or scanning failure",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/unfallStatistik": {
+            "get": {
+                "description": "(46241-0001/46241-0002) Unfälle (polizeilich erfasste): Deutschland, Jahre, Monate, Unfallkategorie, Ortslage",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)"
+                ],
+                "summary": "Unfälle (polizeilich erfasste) abrufen",
+                "parameters": [
+                    {
+                        "enum": [
+                            "Unfälle mit Personenschaden",
+                            "Schwerwiegende Unfälle mit Sachschaden i.e.S",
+                            "Sonst. Unfälle unter dem Einfluss berausch. Mittel",
+                            "Übrige Sachschadensunfälle",
+                            "Insgesamt"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Unfallkategorie",
+                        "name": "unfallkategorie",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter nach Ortslage (innerorts, außerorts (ohne Autobahnen), auf Autobahnen, Insgesamt)",
+                        "name": "ortslage",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Filter nach Jahr",
+                        "name": "jahr",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 12,
+                        "minimum": 0,
+                        "type": "integer",
+                        "description": "Filter nach Monat (1-12, 0 für Ganzjahresdaten)",
+                        "name": "monat",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/data.UnfallStatistik"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - Invalid parameter type or range",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error - Database execution or scanning failure",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/unfallStatistikBundesland": {
+            "get": {
+                "description": "(46241-0020/46241-0021) Unfälle (polizeilich erfasste): Bundesländer, Jahre, Monate, Unfallkategorie, Ortslage",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)"
+                ],
+                "summary": "Unfälle (polizeilich erfasste) nach Bundesland abrufen",
+                "parameters": [
+                    {
+                        "enum": [
+                            "Baden-Württemberg",
+                            "Bayern",
+                            "Berlin",
+                            "Brandenburg",
+                            "Bremen",
+                            "Hamburg",
+                            "Hessen",
+                            "Mecklenburg-Vorpommern",
+                            "Niedersachsen",
+                            "Nordrhein-Westfalen",
+                            "Rheinland-Pfalz",
+                            "Saarland",
+                            "Sachsen",
+                            "Sachsen-Anhalt",
+                            "Schleswig-Holstein",
+                            "Thüringen"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Bundesland",
+                        "name": "bundesland",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "Unfälle mit Personenschaden",
+                            "Schwerwiegende Unfälle mit Sachschaden i.e.S",
+                            "Sonst. Unfälle unter dem Einfluss berausch. Mittel",
+                            "Übrige Sachschadensunfälle",
+                            "Insgesamt"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Unfallkategorie",
+                        "name": "unfallkategorie",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter nach Ortslage (innerorts, außerorts (ohne Autobahnen), auf Autobahnen, Insgesamt)",
+                        "name": "ortslage",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Filter nach Jahr",
+                        "name": "jahr",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 12,
+                        "minimum": 0,
+                        "type": "integer",
+                        "description": "Filter nach Monat (1-12, 0 für Ganzjahresdaten)",
+                        "name": "monat",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/data.UnfallStatistikBundesland"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - Invalid parameter type or range",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error - Database execution or scanning failure",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/unfallStrassenverkehr": {
+            "get": {
+                "description": "(46241-0003/46241-0004) Straßenverkehrsunfälle mit Personenschaden, Getöteten, Schwer- und Leichtverletzten: Deutschland, Jahre, Monate, Straßenklasse, Ortslage",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)"
+                ],
+                "summary": "Straßenverkehrsunfälle mit Personenschaden abrufen",
+                "parameters": [
+                    {
+                        "enum": [
+                            "Autobahnen",
+                            "Bundesstraßen",
+                            "Landesstraßen",
+                            "Kreisstraßen",
+                            "Andere Straßen",
+                            "Insgesamt"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Straßenklasse",
+                        "name": "strassenklasse",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "innerorts",
+                            "außerorts",
+                            "Insgesamt"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Ortslage",
+                        "name": "ortslage",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "Unfälle mit Personenschaden",
+                            "Getötete",
+                            "Schwerverletzte",
+                            "Leichtverletzte"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Kategorie",
+                        "name": "kategorie",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Filter nach Jahr",
+                        "name": "jahr",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 12,
+                        "minimum": 0,
+                        "type": "integer",
+                        "description": "Filter nach Monat (1-12, 0 für Ganzjahresdaten)",
+                        "name": "monat",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/data.UnfallStrassenverkehr"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - Invalid parameter type or range",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error - Database execution or scanning failure",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/unfallStrassenverkehrBundesland": {
+            "get": {
+                "description": "(46241-0022) Straßenverkehrsunfälle mit Personenschaden: Bundesländer, Jahre, Straßenklasse, Ortslage",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)"
+                ],
+                "summary": "Straßenverkehrsunfälle mit Personenschaden nach Bundesland abrufen",
+                "parameters": [
+                    {
+                        "enum": [
+                            "Baden-Württemberg",
+                            "Bayern",
+                            "Berlin",
+                            "Brandenburg",
+                            "Bremen",
+                            "Hamburg",
+                            "Hessen",
+                            "Mecklenburg-Vorpommern",
+                            "Niedersachsen",
+                            "Nordrhein-Westfalen",
+                            "Rheinland-Pfalz",
+                            "Saarland",
+                            "Sachsen",
+                            "Sachsen-Anhalt",
+                            "Schleswig-Holstein",
+                            "Thüringen"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Bundesland",
+                        "name": "bundesland",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "Autobahnen",
+                            "Bundesstraßen",
+                            "Landesstraßen",
+                            "Kreisstraßen",
+                            "Andere Straßen",
+                            "Insgesamt"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Straßenklasse",
+                        "name": "strassenklasse",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "innerorts",
+                            "außerorts",
+                            "Insgesamt"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Ortslage",
+                        "name": "ortslage",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Filter nach Jahr",
+                        "name": "jahr",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/data.UnfallStrassenverkehrBundesland"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - Invalid parameter type or range",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error - Database execution or scanning failure",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/unfallVerunglueckte": {
+            "get": {
+                "description": "(46241-0007/46241-0008) Verunglückte: Deutschland, Jahre, Monate, Geschlecht, Altersgruppen, Art der Verkehrsbeteiligung, Ortslage, Schwere der Verletzung",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)"
+                ],
+                "summary": "Verunglückte abrufen",
+                "parameters": [
+                    {
+                        "enum": [
+                            "Kraftrad mit Versicherungskennzeichen",
+                            "Kraftrad mit amtlichem Kennzeichen",
+                            "Elektrokleinstfahrzeuge",
+                            "Personenkraftwagen",
+                            "Kraftomnibus",
+                            "Güterkraftfahrzeug",
+                            "Landwirtschaftliche Zugmaschine",
+                            "Übrige Kraftfahrzeuge",
+                            "Fahrrad ohne Hilfsmotor",
+                            "Pedelecs",
+                            "Andere Fahrzeuge",
+                            "Fußgänger",
+                            "Andere Personen",
+                            "Insgesamt"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Art der Verkehrsbeteiligung",
+                        "name": "verkehrsart",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter nach Ortslage (innerorts, außerorts (ohne Autobahnen), auf Autobahnen, Insgesamt)",
+                        "name": "ortslage",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "Getötete",
+                            "Schwerverletzte",
+                            "Leichtverletzte",
+                            "Insgesamt"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Schweregrad",
+                        "name": "schweregrad",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "männlich",
+                            "weiblich",
+                            "Ohne Angabe",
+                            "Insgesamt"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Geschlecht",
+                        "name": "geschlecht",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "unter 15 Jahre",
+                            "15 bis unter 18 Jahre",
+                            "18 bis unter 21 Jahre",
+                            "21 bis unter 25 Jahre",
+                            "25 bis unter 35 Jahre",
+                            "35 bis unter 45 Jahre",
+                            "45 bis unter 55 Jahre",
+                            "55 bis unter 65 Jahre",
+                            "65 bis unter 75 Jahre",
+                            "75 Jahre und mehr",
+                            "Alter unbekannt",
+                            "Insgesamt"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Altersgruppe",
+                        "name": "altersgruppe",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Filter nach Jahr",
+                        "name": "jahr",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 12,
+                        "minimum": 0,
+                        "type": "integer",
+                        "description": "Filter nach Monat (1-12, 0 für Ganzjahresdaten)",
+                        "name": "monat",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/data.UnfallVerunglueckte"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - Invalid parameter type or range",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error - Database execution or scanning failure",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/unfallVerunglueckteBundesland": {
+            "get": {
+                "description": "(46241-0023/46241-0024) Verunglückte: Bundesländer, Jahre, Monate, Ortslage, Schwere der Verletzung",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)"
+                ],
+                "summary": "Verunglückte nach Bundesland abrufen",
+                "parameters": [
+                    {
+                        "enum": [
+                            "Baden-Württemberg",
+                            "Bayern",
+                            "Berlin",
+                            "Brandenburg",
+                            "Bremen",
+                            "Hamburg",
+                            "Hessen",
+                            "Mecklenburg-Vorpommern",
+                            "Niedersachsen",
+                            "Nordrhein-Westfalen",
+                            "Rheinland-Pfalz",
+                            "Saarland",
+                            "Sachsen",
+                            "Sachsen-Anhalt",
+                            "Schleswig-Holstein",
+                            "Thüringen"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Bundesland",
+                        "name": "bundesland",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter nach Ortslage (innerorts, außerorts (ohne Autobahnen), auf Autobahnen, Insgesamt)",
+                        "name": "ortslage",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "Getötete",
+                            "Schwerverletzte",
+                            "Leichtverletzte",
+                            "Insgesamt"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Schweregrad",
+                        "name": "schweregrad",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Filter nach Jahr",
+                        "name": "jahr",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 12,
+                        "minimum": 0,
+                        "type": "integer",
+                        "description": "Filter nach Monat (1-12, 0 für Ganzjahresdaten)",
+                        "name": "monat",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/data.UnfallVerunglueckteBundesland"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - Invalid parameter type or range",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error - Database execution or scanning failure",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.HTTPError"
                         }
                     }
                 }
@@ -52,22 +1359,358 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "handlers.ErrorResponse": {
+        "data.Ort": {
             "type": "object",
             "properties": {
-                "message": {
+                "bevoelkerung": {
+                    "type": "integer"
+                },
+                "bundesland": {
+                    "type": "string"
+                },
+                "flaeche": {
+                    "type": "number"
+                },
+                "gemeinde": {
+                    "type": "string"
+                },
+                "gemeindeverband": {
+                    "type": "string"
+                },
+                "kreis": {
+                    "type": "string"
+                },
+                "landkreis": {
+                    "type": "string"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "longitude": {
+                    "type": "number"
+                },
+                "maennlich": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "postleitzahl": {
+                    "type": "string"
+                },
+                "regierungsbezirk": {
+                    "type": "string"
+                },
+                "reisegebiet": {
+                    "type": "string"
+                },
+                "verstaedterungsgrad": {
+                    "type": "string"
+                },
+                "weiblich": {
+                    "type": "integer"
+                }
+            }
+        },
+        "data.Unfall": {
+            "type": "object",
+            "properties": {
+                "bundesland": {
+                    "type": "string"
+                },
+                "gemeinde": {
+                    "type": "string"
+                },
+                "jahr": {
+                    "type": "integer"
+                },
+                "kreis": {
+                    "type": "string"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "lichtverhaeltnis": {
+                    "type": "string"
+                },
+                "longitude": {
+                    "type": "number"
+                },
+                "mit_fahrrad": {
+                    "type": "boolean"
+                },
+                "mit_fussgaenger": {
+                    "type": "boolean"
+                },
+                "mit_gueterkraftfahrzeug": {
+                    "type": "boolean"
+                },
+                "mit_kraftrad": {
+                    "type": "boolean"
+                },
+                "mit_pkw": {
+                    "type": "boolean"
+                },
+                "mit_sonstigen_verkehrsmittel": {
+                    "type": "boolean"
+                },
+                "monat": {
+                    "type": "integer"
+                },
+                "regierungsbezirk": {
+                    "type": "string"
+                },
+                "schweregrad": {
+                    "type": "string"
+                },
+                "strassenzustand": {
+                    "type": "string"
+                },
+                "uhrzeit": {
+                    "type": "string"
+                },
+                "unfallart": {
+                    "type": "string"
+                },
+                "unfalltyp": {
+                    "type": "string"
+                },
+                "wochentag": {
                     "type": "string"
                 }
             }
         },
-        "handlers.User": {
+        "data.UnfallBeteiligung": {
             "type": "object",
             "properties": {
-                "id": {
+                "altersgruppe": {
                     "type": "string"
                 },
-                "name": {
+                "anzahl": {
+                    "type": "integer"
+                },
+                "beteiligungsart": {
+                    "description": "\"Unfallbeteiligte\" / \"Hauptverursacher des Unfalls\"",
                     "type": "string"
+                },
+                "geschlecht": {
+                    "type": "string"
+                },
+                "jahr": {
+                    "type": "integer"
+                },
+                "monat": {
+                    "description": "1-12 for months, 0 for full year data",
+                    "type": "integer"
+                },
+                "ortslage": {
+                    "type": "string"
+                },
+                "unfallkategorie": {
+                    "type": "string"
+                },
+                "verkehrsart": {
+                    "type": "string"
+                }
+            }
+        },
+        "data.UnfallFehlverhalten": {
+            "type": "object",
+            "properties": {
+                "anzahl": {
+                    "type": "integer"
+                },
+                "fehlverhalten": {
+                    "type": "string"
+                },
+                "jahr": {
+                    "type": "integer"
+                },
+                "monat": {
+                    "description": "1-12 for months, 0 for full year data",
+                    "type": "integer"
+                },
+                "verkehrsart": {
+                    "type": "string"
+                }
+            }
+        },
+        "data.UnfallPersonenschaden": {
+            "type": "object",
+            "properties": {
+                "anzahl": {
+                    "type": "integer"
+                },
+                "jahr": {
+                    "type": "integer"
+                },
+                "kategorie": {
+                    "type": "string"
+                },
+                "monat": {
+                    "description": "1-12 for months, 0 for full year data",
+                    "type": "integer"
+                },
+                "ortslage": {
+                    "type": "string"
+                },
+                "schweregrad": {
+                    "type": "string"
+                },
+                "unfalltyp": {
+                    "type": "string"
+                }
+            }
+        },
+        "data.UnfallStatistik": {
+            "type": "object",
+            "properties": {
+                "anzahl": {
+                    "type": "integer"
+                },
+                "jahr": {
+                    "type": "integer"
+                },
+                "monat": {
+                    "description": "1-12 for months, 0 for full year data",
+                    "type": "integer"
+                },
+                "ortslage": {
+                    "type": "string"
+                },
+                "unfallkategorie": {
+                    "type": "string"
+                }
+            }
+        },
+        "data.UnfallStatistikBundesland": {
+            "type": "object",
+            "properties": {
+                "anzahl": {
+                    "type": "integer"
+                },
+                "bundesland": {
+                    "type": "string"
+                },
+                "jahr": {
+                    "type": "integer"
+                },
+                "monat": {
+                    "description": "1-12 for months, 0 for full year data",
+                    "type": "integer"
+                },
+                "ortslage": {
+                    "type": "string"
+                },
+                "unfallkategorie": {
+                    "type": "string"
+                }
+            }
+        },
+        "data.UnfallStrassenverkehr": {
+            "type": "object",
+            "properties": {
+                "anzahl": {
+                    "type": "integer"
+                },
+                "jahr": {
+                    "type": "integer"
+                },
+                "kategorie": {
+                    "type": "string"
+                },
+                "monat": {
+                    "description": "1-12 for months, 0 for full year data",
+                    "type": "integer"
+                },
+                "ortslage": {
+                    "type": "string"
+                },
+                "strassenklasse": {
+                    "type": "string"
+                }
+            }
+        },
+        "data.UnfallStrassenverkehrBundesland": {
+            "type": "object",
+            "properties": {
+                "anzahl": {
+                    "type": "integer"
+                },
+                "bundesland": {
+                    "type": "string"
+                },
+                "jahr": {
+                    "type": "integer"
+                },
+                "ortslage": {
+                    "type": "string"
+                },
+                "strassenklasse": {
+                    "type": "string"
+                }
+            }
+        },
+        "data.UnfallVerunglueckte": {
+            "type": "object",
+            "properties": {
+                "altersgruppe": {
+                    "type": "string"
+                },
+                "anzahl": {
+                    "type": "integer"
+                },
+                "geschlecht": {
+                    "type": "string"
+                },
+                "jahr": {
+                    "type": "integer"
+                },
+                "monat": {
+                    "description": "1-12 for months, 0 for full year data",
+                    "type": "integer"
+                },
+                "ortslage": {
+                    "type": "string"
+                },
+                "schweregrad": {
+                    "type": "string"
+                },
+                "verkehrsart": {
+                    "type": "string"
+                }
+            }
+        },
+        "data.UnfallVerunglueckteBundesland": {
+            "type": "object",
+            "properties": {
+                "anzahl": {
+                    "type": "integer"
+                },
+                "bundesland": {
+                    "type": "string"
+                },
+                "jahr": {
+                    "type": "integer"
+                },
+                "monat": {
+                    "description": "1-12 for months, 0 for full year data",
+                    "type": "integer"
+                },
+                "ortslage": {
+                    "type": "string"
+                },
+                "schweregrad": {
+                    "type": "string"
+                }
+            }
+        },
+        "handlers.HTTPError": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "invalid parameter format"
                 }
             }
         }

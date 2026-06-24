@@ -1,15 +1,239 @@
 basePath: /api/v1
 definitions:
-  handlers.ErrorResponse:
+  data.Ort:
     properties:
-      message:
+      bevoelkerung:
+        type: integer
+      bundesland:
+        type: string
+      flaeche:
+        type: number
+      gemeinde:
+        type: string
+      gemeindeverband:
+        type: string
+      kreis:
+        type: string
+      landkreis:
+        type: string
+      latitude:
+        type: number
+      longitude:
+        type: number
+      maennlich:
+        type: integer
+      name:
+        type: string
+      postleitzahl:
+        type: string
+      regierungsbezirk:
+        type: string
+      reisegebiet:
+        type: string
+      verstaedterungsgrad:
+        type: string
+      weiblich:
+        type: integer
+    type: object
+  data.Unfall:
+    properties:
+      bundesland:
+        type: string
+      gemeinde:
+        type: string
+      jahr:
+        type: integer
+      kreis:
+        type: string
+      latitude:
+        type: number
+      lichtverhaeltnis:
+        type: string
+      longitude:
+        type: number
+      mit_fahrrad:
+        type: boolean
+      mit_fussgaenger:
+        type: boolean
+      mit_gueterkraftfahrzeug:
+        type: boolean
+      mit_kraftrad:
+        type: boolean
+      mit_pkw:
+        type: boolean
+      mit_sonstigen_verkehrsmittel:
+        type: boolean
+      monat:
+        type: integer
+      regierungsbezirk:
+        type: string
+      schweregrad:
+        type: string
+      strassenzustand:
+        type: string
+      uhrzeit:
+        type: string
+      unfallart:
+        type: string
+      unfalltyp:
+        type: string
+      wochentag:
         type: string
     type: object
-  handlers.User:
+  data.UnfallBeteiligung:
     properties:
-      id:
+      altersgruppe:
         type: string
-      name:
+      anzahl:
+        type: integer
+      beteiligungsart:
+        description: '"Unfallbeteiligte" / "Hauptverursacher des Unfalls"'
+        type: string
+      geschlecht:
+        type: string
+      jahr:
+        type: integer
+      monat:
+        description: 1-12 for months, 0 for full year data
+        type: integer
+      ortslage:
+        type: string
+      unfallkategorie:
+        type: string
+      verkehrsart:
+        type: string
+    type: object
+  data.UnfallFehlverhalten:
+    properties:
+      anzahl:
+        type: integer
+      fehlverhalten:
+        type: string
+      jahr:
+        type: integer
+      monat:
+        description: 1-12 for months, 0 for full year data
+        type: integer
+      verkehrsart:
+        type: string
+    type: object
+  data.UnfallPersonenschaden:
+    properties:
+      anzahl:
+        type: integer
+      jahr:
+        type: integer
+      kategorie:
+        type: string
+      monat:
+        description: 1-12 for months, 0 for full year data
+        type: integer
+      ortslage:
+        type: string
+      schweregrad:
+        type: string
+      unfalltyp:
+        type: string
+    type: object
+  data.UnfallStatistik:
+    properties:
+      anzahl:
+        type: integer
+      jahr:
+        type: integer
+      monat:
+        description: 1-12 for months, 0 for full year data
+        type: integer
+      ortslage:
+        type: string
+      unfallkategorie:
+        type: string
+    type: object
+  data.UnfallStatistikBundesland:
+    properties:
+      anzahl:
+        type: integer
+      bundesland:
+        type: string
+      jahr:
+        type: integer
+      monat:
+        description: 1-12 for months, 0 for full year data
+        type: integer
+      ortslage:
+        type: string
+      unfallkategorie:
+        type: string
+    type: object
+  data.UnfallStrassenverkehr:
+    properties:
+      anzahl:
+        type: integer
+      jahr:
+        type: integer
+      kategorie:
+        type: string
+      monat:
+        description: 1-12 for months, 0 for full year data
+        type: integer
+      ortslage:
+        type: string
+      strassenklasse:
+        type: string
+    type: object
+  data.UnfallStrassenverkehrBundesland:
+    properties:
+      anzahl:
+        type: integer
+      bundesland:
+        type: string
+      jahr:
+        type: integer
+      ortslage:
+        type: string
+      strassenklasse:
+        type: string
+    type: object
+  data.UnfallVerunglueckte:
+    properties:
+      altersgruppe:
+        type: string
+      anzahl:
+        type: integer
+      geschlecht:
+        type: string
+      jahr:
+        type: integer
+      monat:
+        description: 1-12 for months, 0 for full year data
+        type: integer
+      ortslage:
+        type: string
+      schweregrad:
+        type: string
+      verkehrsart:
+        type: string
+    type: object
+  data.UnfallVerunglueckteBundesland:
+    properties:
+      anzahl:
+        type: integer
+      bundesland:
+        type: string
+      jahr:
+        type: integer
+      monat:
+        description: 1-12 for months, 0 for full year data
+        type: integer
+      ortslage:
+        type: string
+      schweregrad:
+        type: string
+    type: object
+  handlers.HTTPError:
+    properties:
+      error:
+        example: invalid parameter format
         type: string
     type: object
 host: localhost:8080
@@ -19,27 +243,995 @@ info:
   title: UnfallAPI
   version: "1.0"
 paths:
-  /users/{id}:
+  /ort:
     get:
-      description: Returns a single user
+      consumes:
+      - application/json
+      description: Strukturierte Daten über Bundes­länder, Regierungs­bezirke, Kreise,
+        Gemeindeverbände und Gemeinden abrufen inklusive Bevölkerung, Fläche, und
+        Geokoordinaten.
       parameters:
-      - description: User ID
-        in: path
-        name: id
-        required: true
+      - description: Filter nach Bundesland
+        enum:
+        - Baden-Württemberg
+        - Bayern
+        - Berlin
+        - Brandenburg
+        - Bremen
+        - Hamburg
+        - Hessen
+        - Mecklenburg-Vorpommern
+        - Niedersachsen
+        - Nordrhein-Westfalen
+        - Rheinland-Pfalz
+        - Saarland
+        - Sachsen
+        - Sachsen-Anhalt
+        - Schleswig-Holstein
+        - Thüringen
+        in: query
+        name: bundesland
         type: string
+      - description: Filter nach Regierungsbezirk (Amtlicher Gemeindeschlüssel)
+        in: query
+        name: regierungsbezirk
+        type: string
+      - description: Filter nach Kreis (Amtlicher Gemeindeschlüssel)
+        in: query
+        name: kreis
+        type: string
+      - description: Filter nach Gemeinde (Amtlicher Gemeindeschlüssel)
+        in: query
+        name: gemeinde
+        type: string
+      - description: Filter nach Ortsname
+        in: query
+        name: name
+        type: string
+      - description: Filter nach Gemeindeverband
+        in: query
+        name: gemeindeverband
+        type: string
+      - description: Filter nach Landkreis
+        in: query
+        name: landkreis
+        type: string
+      - description: Filter nach Postleitzahl
+        in: query
+        name: postleitzahl
+        type: string
+      - description: Filter nach Mindestfläche
+        format: float64
+        in: query
+        name: min_flaeche
+        type: number
+      - description: Filter nach Maximalfläche
+        format: float64
+        in: query
+        name: max_flaeche
+        type: number
+      - description: Filter nach Mindestbevölkerung
+        in: query
+        name: min_bevoelkerung
+        type: integer
+      - description: Filter nach Maximalbevölkerung
+        in: query
+        name: max_bevoelkerung
+        type: integer
+      - description: Filter nach Mindestanzahl männlich
+        in: query
+        name: min_maennlich
+        type: integer
+      - description: Filter nach Maximalanzahl männlich
+        in: query
+        name: max_maennlich
+        type: integer
+      - description: Filter nach Mindestanzahl weiblich
+        in: query
+        name: min_weiblich
+        type: integer
+      - description: Filter nach Maximalanzahl weiblich
+        in: query
+        name: max_weiblich
+        type: integer
+      - description: Filter nach Reisegebiet
+        in: query
+        name: reisegebiet
+        type: string
+      - description: Filter nach Verstädterungsgrad
+        enum:
+        - dicht besiedelt
+        - mittlere Besiedlungsdichte
+        - gering besiedelt
+        in: query
+        name: verstaedterungsgrad
+        type: string
+      - description: Minimum Latitude
+        format: float64
+        in: query
+        name: min_lat
+        type: number
+      - description: Maximum Latitude
+        format: float64
+        in: query
+        name: max_lat
+        type: number
+      - description: Minimum Longitude
+        format: float64
+        in: query
+        name: min_lon
+        type: number
+      - description: Maximum Longitude
+        format: float64
+        in: query
+        name: max_lon
+        type: number
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/handlers.User'
-        "404":
-          description: Not Found
+            items:
+              $ref: '#/definitions/data.Ort'
+            type: array
+        "400":
+          description: Bad Request - Invalid parameter type or range
           schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
-      summary: Get user by ID
+            $ref: '#/definitions/handlers.HTTPError'
+        "500":
+          description: Internal Server Error - Database execution or scanning failure
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+      summary: Detaillierte Ortsdaten im Gemeindeverzeichnis abrufen
       tags:
-      - users
+      - Gemeindeverzeichnis des Statistischen Bundesamtes
+  /unfall:
+    get:
+      consumes:
+      - application/json
+      description: Detaillierte, punktgenaue Daten zu Straßenverkehrsunfällen inklusive
+        Geokoordinaten und Unfallumständen abrufen
+      parameters:
+      - description: Filter nach Bundesland
+        enum:
+        - Baden-Württemberg
+        - Bayern
+        - Berlin
+        - Brandenburg
+        - Bremen
+        - Hamburg
+        - Hessen
+        - Mecklenburg-Vorpommern
+        - Niedersachsen
+        - Nordrhein-Westfalen
+        - Rheinland-Pfalz
+        - Saarland
+        - Sachsen
+        - Sachsen-Anhalt
+        - Schleswig-Holstein
+        - Thüringen
+        in: query
+        name: bundesland
+        type: string
+      - description: Filter nach Regierungsbezirk (Amtlicher Gemeindeschlüssel)
+        in: query
+        name: regierungsbezirk
+        type: string
+      - description: Filter nach Kreis (Amtlicher Gemeindeschlüssel)
+        in: query
+        name: kreis
+        type: string
+      - description: Filter nach Gemeinde (Amtlicher Gemeindeschlüssel)
+        in: query
+        name: gemeinde
+        type: string
+      - description: Filter nach Jahr
+        in: query
+        name: jahr
+        type: integer
+      - description: Filter nach Monat (1-12)
+        in: query
+        maximum: 12
+        minimum: 1
+        name: monat
+        type: integer
+      - description: Filter nach Uhrzeit (xx:00 Uhr)
+        in: query
+        name: uhrzeit
+        type: string
+      - description: Filter nach Wochentag
+        enum:
+        - Montag
+        - Dienstag
+        - Mittwoch
+        - Donnerstag
+        - Freitag
+        - Samstag
+        - Sonntag
+        in: query
+        name: wochentag
+        type: string
+      - description: Filter nach Schweregrad
+        enum:
+        - Unfall mit Getöteten
+        - Unfall mit Schwerverletzten
+        - Unfall mit Leichtverletzten
+        in: query
+        name: schweregrad
+        type: string
+      - description: Filter nach Unfallart
+        enum:
+        - Zusammenstoß mit anfahrendem/anhaltendem/ruhendem Fahrzeug
+        - Zusammenstoß mit vorausfahrendem/wartendem Fahrzeug
+        - Zusammenstoß mit seitlich in gleicher Richtung fahrendem Fahrzeug
+        - Zusammenstoß mit entgegenkommendem Fahrzeug
+        - Zusammenstoß mit einbiegendem/kreuzendem Fahrzeug
+        - Zusammenstoß zwischen Fahrzeug und Fußgänger
+        - Aufprall auf Fahrbahnhindernis
+        - Abkommen von Fahrbahn nach rechts
+        - Abkommen von Fahrbahn nach links
+        - Unfall anderer Art
+        in: query
+        name: unfallart
+        type: string
+      - description: Filter nach Unfalltyp
+        enum:
+        - Fahrunfall
+        - Abbiegeunfall
+        - Einbiegen/Kreuzen-Unfall
+        - Überschreiten-Unfall
+        - Unfall durch ruhenden Verkehr
+        - Unfall im Längsverkehr
+        - sonstiger Unfall
+        in: query
+        name: unfalltyp
+        type: string
+      - description: Filter nach Lichtverhätltnis
+        enum:
+        - Tageslicht
+        - Dämmerung
+        - Dunkelheit
+        in: query
+        name: lichtverhaeltnis
+        type: string
+      - description: Beteiligung von Fahrrädern (true/false)
+        in: query
+        name: mit_fahrrad
+        type: boolean
+      - description: Beteiligung von PKWs (true/false)
+        in: query
+        name: mit_pkw
+        type: boolean
+      - description: Beteiligung von Fußgängern (true/false)
+        in: query
+        name: mit_fussgaenger
+        type: boolean
+      - description: Beteiligung von Kraftfahrzeugen (true/false)
+        in: query
+        name: mit_kraftrad
+        type: boolean
+      - description: Beteiligung von Güterkraftfahrzeugen (true/false)
+        in: query
+        name: mit_gueterkraftfahrzeug
+        type: boolean
+      - description: Beteiligung von sonstigen Verkehrsmitteln (true/false)
+        in: query
+        name: mit_sonstigen_verkehrsmittel
+        type: boolean
+      - description: Filter nach Straßenzustand
+        enum:
+        - trocken
+        - nass/feucht/schlüpfrig
+        - winterglatt
+        in: query
+        name: strassenzustand
+        type: string
+      - description: Minimum Latitude
+        format: float64
+        in: query
+        name: min_lat
+        type: number
+      - description: Maximum Latitude
+        format: float64
+        in: query
+        name: max_lat
+        type: number
+      - description: Minimum Longitude
+        format: float64
+        in: query
+        name: min_lon
+        type: number
+      - description: Maximum Longitude
+        format: float64
+        in: query
+        name: max_lon
+        type: number
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/data.Unfall'
+            type: array
+        "400":
+          description: Bad Request - Invalid parameter type or range
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+        "500":
+          description: Internal Server Error - Database execution or scanning failure
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+      summary: Detalierte Verkehrsunfälle mit Personenschaden im Unfallatlas abrufen
+      tags:
+      - Unfallatlas
+  /unfallBeteiligung:
+    get:
+      consumes:
+      - application/json
+      description: '(46241-0011/46241-0012) Unfallbeteiligte, Hauptverursacher des
+        Unfalls: Deutschland, Jahre, Monate, Geschlecht, Altersgruppen, Art der Verkehrsbeteiligung,
+        Unfallkategorie, Ortslage'
+      parameters:
+      - description: Filter nach Art der Verkehrsbeteiligung
+        enum:
+        - Kraftrad mit Versicherungskennzeichen
+        - Kraftrad mit amtlichem Kennzeichen
+        - Elektrokleinstfahrzeuge
+        - Personenkraftwagen
+        - Kraftomnibus
+        - Güterkraftfahrzeug
+        - Landwirtschaftliche Zugmaschine
+        - Übrige Kraftfahrzeuge
+        - Fahrrad ohne Hilfsmotor
+        - Pedelecs
+        - Andere Fahrzeuge
+        - Fußgänger
+        - Andere Personen
+        - Insgesamt
+        in: query
+        name: verkehrsart
+        type: string
+      - description: Filter nach Unfallkategorie
+        enum:
+        - Unfälle mit Personenschaden
+        - Schwerwiegende Unfälle mit Sachschaden i.e.S
+        - Sonst. Unfälle unter dem Einfluss berausch. Mittel
+        - Übrige Sachschadensunfälle
+        - Insgesamt
+        in: query
+        name: unfallkategorie
+        type: string
+      - description: Filter nach Ortslage (innerorts, außerorts (ohne Autobahnen),
+          auf Autobahnen, Insgesamt)
+        in: query
+        name: ortslage
+        type: string
+      - description: Filter nach Geschlecht
+        enum:
+        - männlich
+        - weiblich
+        - Ohne Angabe
+        - Insgesamt
+        in: query
+        name: geschlecht
+        type: string
+      - description: Filter nach Altersgruppe
+        enum:
+        - unter 15 Jahre
+        - 15 bis unter 18 Jahre
+        - 18 bis unter 21 Jahre
+        - 21 bis unter 25 Jahre
+        - 25 bis unter 35 Jahre
+        - 35 bis unter 45 Jahre
+        - 45 bis unter 55 Jahre
+        - 55 bis unter 65 Jahre
+        - 65 bis unter 75 Jahre
+        - 75 Jahre und mehr
+        - Alter unbekannt
+        - Insgesamt
+        in: query
+        name: altersgruppe
+        type: string
+      - description: Filter nach Beteiligungsart
+        enum:
+        - Unfallbeteiligte
+        - Hauptverursacher des Unfalls
+        in: query
+        name: beteiligungsart
+        type: string
+      - description: Filter nach Jahr
+        in: query
+        name: jahr
+        type: integer
+      - description: Filter nach Monat (1-12, 0 für Ganzjahresdaten)
+        in: query
+        maximum: 12
+        minimum: 0
+        name: monat
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/data.UnfallBeteiligung'
+            type: array
+        "400":
+          description: Bad Request - Invalid parameter type or range
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+        "500":
+          description: Internal Server Error - Database execution or scanning failure
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+      summary: Unfallbeteiligte, Hauptverursacher des Unfalls abrufen
+      tags:
+      - GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)
+  /unfallFehlverhalten:
+    get:
+      consumes:
+      - application/json
+      description: '(46241-0009/46241-0010) Unfallbeteiligte: Deutschland, Jahre,
+        Monate, Art der Verkehrsbeteiligung, Fehlverhalten der Fahrzeugführer und
+        Fußgänger bei Unfällen mit Personenschaden'
+      parameters:
+      - description: Filter nach Art der Verkehrsbeteiligung
+        enum:
+        - Kraftrad mit Versicherungskennzeichen
+        - Kraftrad mit amtlichem Kennzeichen
+        - Elektrokleinstfahrzeuge
+        - Personenkraftwagen
+        - Kraftomnibus
+        - Güterkraftfahrzeug
+        - Landwirtschaftliche Zugmaschine
+        - Übrige Kraftfahrzeuge
+        - Fahrrad ohne Hilfsmotor
+        - Pedelecs
+        - Andere Fahrzeuge
+        - Fußgänger
+        - Andere Personen
+        in: query
+        name: verkehrsart
+        type: string
+      - description: Filter nach Fehlverhalten
+        in: query
+        name: fehlverhalten
+        type: string
+      - description: Filter nach Jahr
+        in: query
+        name: jahr
+        type: integer
+      - description: Filter nach Monat (1-12, 0 für Ganzjahresdaten)
+        in: query
+        maximum: 12
+        minimum: 0
+        name: monat
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/data.UnfallFehlverhalten'
+            type: array
+        "400":
+          description: Bad Request - Invalid parameter type or range
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+        "500":
+          description: Internal Server Error - Database execution or scanning failure
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+      summary: Fehlverhalten bei Unfällen mit Personenschaden abrufen
+      tags:
+      - GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)
+  /unfallPersonenschaden:
+    get:
+      consumes:
+      - application/json
+      description: '(46241-0005/46241-0006) Unfälle mit Personenschaden, Verunglückte:
+        Deutschland, Jahre, Monate, Unfalltyp/Unfallart, Ortslage, Schwere der Verletzung'
+      parameters:
+      - description: Filter nach Unfalltyp
+        enum:
+        - Fahrunfall
+        - Abbiege-Unfall
+        - Einbiegen/Kreuzen-Unfall
+        - Überschreiten-Unfall
+        - Unfall durch ruhenden Verkehr
+        - Unfall im Längsverkehr
+        - Sonstiger Unfall
+        - Insgesamt
+        in: query
+        name: unfalltyp
+        type: string
+      - description: Filter nach Ortslage (innerorts, außerorts (ohne Autobahnen),
+          auf Autobahnen, Insgesamt)
+        in: query
+        name: ortslage
+        type: string
+      - description: Filter nach Schweregrad
+        enum:
+        - Getötete
+        - Schwerverletzte
+        - Leichtverletzte
+        - Insgesamt
+        in: query
+        name: schweregrad
+        type: string
+      - description: Filter nach Kategorie
+        enum:
+        - Unfälle mit Personenschaden
+        - Verunglückte
+        in: query
+        name: kategorie
+        type: string
+      - description: Filter nach Jahr
+        in: query
+        name: jahr
+        type: integer
+      - description: Filter nach Monat (1-12, 0 für Ganzjahresdaten)
+        in: query
+        maximum: 12
+        minimum: 0
+        name: monat
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/data.UnfallPersonenschaden'
+            type: array
+        "400":
+          description: Bad Request - Invalid parameter type or range
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+        "500":
+          description: Internal Server Error - Database execution or scanning failure
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+      summary: Unfälle mit Personenschaden abrufen
+      tags:
+      - GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)
+  /unfallStatistik:
+    get:
+      consumes:
+      - application/json
+      description: '(46241-0001/46241-0002) Unfälle (polizeilich erfasste): Deutschland,
+        Jahre, Monate, Unfallkategorie, Ortslage'
+      parameters:
+      - description: Filter nach Unfallkategorie
+        enum:
+        - Unfälle mit Personenschaden
+        - Schwerwiegende Unfälle mit Sachschaden i.e.S
+        - Sonst. Unfälle unter dem Einfluss berausch. Mittel
+        - Übrige Sachschadensunfälle
+        - Insgesamt
+        in: query
+        name: unfallkategorie
+        type: string
+      - description: Filter nach Ortslage (innerorts, außerorts (ohne Autobahnen),
+          auf Autobahnen, Insgesamt)
+        in: query
+        name: ortslage
+        type: string
+      - description: Filter nach Jahr
+        in: query
+        name: jahr
+        type: integer
+      - description: Filter nach Monat (1-12, 0 für Ganzjahresdaten)
+        in: query
+        maximum: 12
+        minimum: 0
+        name: monat
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/data.UnfallStatistik'
+            type: array
+        "400":
+          description: Bad Request - Invalid parameter type or range
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+        "500":
+          description: Internal Server Error - Database execution or scanning failure
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+      summary: Unfälle (polizeilich erfasste) abrufen
+      tags:
+      - GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)
+  /unfallStatistikBundesland:
+    get:
+      consumes:
+      - application/json
+      description: '(46241-0020/46241-0021) Unfälle (polizeilich erfasste): Bundesländer,
+        Jahre, Monate, Unfallkategorie, Ortslage'
+      parameters:
+      - description: Filter nach Bundesland
+        enum:
+        - Baden-Württemberg
+        - Bayern
+        - Berlin
+        - Brandenburg
+        - Bremen
+        - Hamburg
+        - Hessen
+        - Mecklenburg-Vorpommern
+        - Niedersachsen
+        - Nordrhein-Westfalen
+        - Rheinland-Pfalz
+        - Saarland
+        - Sachsen
+        - Sachsen-Anhalt
+        - Schleswig-Holstein
+        - Thüringen
+        in: query
+        name: bundesland
+        type: string
+      - description: Filter nach Unfallkategorie
+        enum:
+        - Unfälle mit Personenschaden
+        - Schwerwiegende Unfälle mit Sachschaden i.e.S
+        - Sonst. Unfälle unter dem Einfluss berausch. Mittel
+        - Übrige Sachschadensunfälle
+        - Insgesamt
+        in: query
+        name: unfallkategorie
+        type: string
+      - description: Filter nach Ortslage (innerorts, außerorts (ohne Autobahnen),
+          auf Autobahnen, Insgesamt)
+        in: query
+        name: ortslage
+        type: string
+      - description: Filter nach Jahr
+        in: query
+        name: jahr
+        type: integer
+      - description: Filter nach Monat (1-12, 0 für Ganzjahresdaten)
+        in: query
+        maximum: 12
+        minimum: 0
+        name: monat
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/data.UnfallStatistikBundesland'
+            type: array
+        "400":
+          description: Bad Request - Invalid parameter type or range
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+        "500":
+          description: Internal Server Error - Database execution or scanning failure
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+      summary: Unfälle (polizeilich erfasste) nach Bundesland abrufen
+      tags:
+      - GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)
+  /unfallStrassenverkehr:
+    get:
+      consumes:
+      - application/json
+      description: '(46241-0003/46241-0004) Straßenverkehrsunfälle mit Personenschaden,
+        Getöteten, Schwer- und Leichtverletzten: Deutschland, Jahre, Monate, Straßenklasse,
+        Ortslage'
+      parameters:
+      - description: Filter nach Straßenklasse
+        enum:
+        - Autobahnen
+        - Bundesstraßen
+        - Landesstraßen
+        - Kreisstraßen
+        - Andere Straßen
+        - Insgesamt
+        in: query
+        name: strassenklasse
+        type: string
+      - description: Filter nach Ortslage
+        enum:
+        - innerorts
+        - außerorts
+        - Insgesamt
+        in: query
+        name: ortslage
+        type: string
+      - description: Filter nach Kategorie
+        enum:
+        - Unfälle mit Personenschaden
+        - Getötete
+        - Schwerverletzte
+        - Leichtverletzte
+        in: query
+        name: kategorie
+        type: string
+      - description: Filter nach Jahr
+        in: query
+        name: jahr
+        type: integer
+      - description: Filter nach Monat (1-12, 0 für Ganzjahresdaten)
+        in: query
+        maximum: 12
+        minimum: 0
+        name: monat
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/data.UnfallStrassenverkehr'
+            type: array
+        "400":
+          description: Bad Request - Invalid parameter type or range
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+        "500":
+          description: Internal Server Error - Database execution or scanning failure
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+      summary: Straßenverkehrsunfälle mit Personenschaden abrufen
+      tags:
+      - GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)
+  /unfallStrassenverkehrBundesland:
+    get:
+      consumes:
+      - application/json
+      description: '(46241-0022) Straßenverkehrsunfälle mit Personenschaden: Bundesländer,
+        Jahre, Straßenklasse, Ortslage'
+      parameters:
+      - description: Filter nach Bundesland
+        enum:
+        - Baden-Württemberg
+        - Bayern
+        - Berlin
+        - Brandenburg
+        - Bremen
+        - Hamburg
+        - Hessen
+        - Mecklenburg-Vorpommern
+        - Niedersachsen
+        - Nordrhein-Westfalen
+        - Rheinland-Pfalz
+        - Saarland
+        - Sachsen
+        - Sachsen-Anhalt
+        - Schleswig-Holstein
+        - Thüringen
+        in: query
+        name: bundesland
+        type: string
+      - description: Filter nach Straßenklasse
+        enum:
+        - Autobahnen
+        - Bundesstraßen
+        - Landesstraßen
+        - Kreisstraßen
+        - Andere Straßen
+        - Insgesamt
+        in: query
+        name: strassenklasse
+        type: string
+      - description: Filter nach Ortslage
+        enum:
+        - innerorts
+        - außerorts
+        - Insgesamt
+        in: query
+        name: ortslage
+        type: string
+      - description: Filter nach Jahr
+        in: query
+        name: jahr
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/data.UnfallStrassenverkehrBundesland'
+            type: array
+        "400":
+          description: Bad Request - Invalid parameter type or range
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+        "500":
+          description: Internal Server Error - Database execution or scanning failure
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+      summary: Straßenverkehrsunfälle mit Personenschaden nach Bundesland abrufen
+      tags:
+      - GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)
+  /unfallVerunglueckte:
+    get:
+      consumes:
+      - application/json
+      description: '(46241-0007/46241-0008) Verunglückte: Deutschland, Jahre, Monate,
+        Geschlecht, Altersgruppen, Art der Verkehrsbeteiligung, Ortslage, Schwere
+        der Verletzung'
+      parameters:
+      - description: Filter nach Art der Verkehrsbeteiligung
+        enum:
+        - Kraftrad mit Versicherungskennzeichen
+        - Kraftrad mit amtlichem Kennzeichen
+        - Elektrokleinstfahrzeuge
+        - Personenkraftwagen
+        - Kraftomnibus
+        - Güterkraftfahrzeug
+        - Landwirtschaftliche Zugmaschine
+        - Übrige Kraftfahrzeuge
+        - Fahrrad ohne Hilfsmotor
+        - Pedelecs
+        - Andere Fahrzeuge
+        - Fußgänger
+        - Andere Personen
+        - Insgesamt
+        in: query
+        name: verkehrsart
+        type: string
+      - description: Filter nach Ortslage (innerorts, außerorts (ohne Autobahnen),
+          auf Autobahnen, Insgesamt)
+        in: query
+        name: ortslage
+        type: string
+      - description: Filter nach Schweregrad
+        enum:
+        - Getötete
+        - Schwerverletzte
+        - Leichtverletzte
+        - Insgesamt
+        in: query
+        name: schweregrad
+        type: string
+      - description: Filter nach Geschlecht
+        enum:
+        - männlich
+        - weiblich
+        - Ohne Angabe
+        - Insgesamt
+        in: query
+        name: geschlecht
+        type: string
+      - description: Filter nach Altersgruppe
+        enum:
+        - unter 15 Jahre
+        - 15 bis unter 18 Jahre
+        - 18 bis unter 21 Jahre
+        - 21 bis unter 25 Jahre
+        - 25 bis unter 35 Jahre
+        - 35 bis unter 45 Jahre
+        - 45 bis unter 55 Jahre
+        - 55 bis unter 65 Jahre
+        - 65 bis unter 75 Jahre
+        - 75 Jahre und mehr
+        - Alter unbekannt
+        - Insgesamt
+        in: query
+        name: altersgruppe
+        type: string
+      - description: Filter nach Jahr
+        in: query
+        name: jahr
+        type: integer
+      - description: Filter nach Monat (1-12, 0 für Ganzjahresdaten)
+        in: query
+        maximum: 12
+        minimum: 0
+        name: monat
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/data.UnfallVerunglueckte'
+            type: array
+        "400":
+          description: Bad Request - Invalid parameter type or range
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+        "500":
+          description: Internal Server Error - Database execution or scanning failure
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+      summary: Verunglückte abrufen
+      tags:
+      - GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)
+  /unfallVerunglueckteBundesland:
+    get:
+      consumes:
+      - application/json
+      description: '(46241-0023/46241-0024) Verunglückte: Bundesländer, Jahre, Monate,
+        Ortslage, Schwere der Verletzung'
+      parameters:
+      - description: Filter nach Bundesland
+        enum:
+        - Baden-Württemberg
+        - Bayern
+        - Berlin
+        - Brandenburg
+        - Bremen
+        - Hamburg
+        - Hessen
+        - Mecklenburg-Vorpommern
+        - Niedersachsen
+        - Nordrhein-Westfalen
+        - Rheinland-Pfalz
+        - Saarland
+        - Sachsen
+        - Sachsen-Anhalt
+        - Schleswig-Holstein
+        - Thüringen
+        in: query
+        name: bundesland
+        type: string
+      - description: Filter nach Ortslage (innerorts, außerorts (ohne Autobahnen),
+          auf Autobahnen, Insgesamt)
+        in: query
+        name: ortslage
+        type: string
+      - description: Filter nach Schweregrad
+        enum:
+        - Getötete
+        - Schwerverletzte
+        - Leichtverletzte
+        - Insgesamt
+        in: query
+        name: schweregrad
+        type: string
+      - description: Filter nach Jahr
+        in: query
+        name: jahr
+        type: integer
+      - description: Filter nach Monat (1-12, 0 für Ganzjahresdaten)
+        in: query
+        maximum: 12
+        minimum: 0
+        name: monat
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/data.UnfallVerunglueckteBundesland'
+            type: array
+        "400":
+          description: Bad Request - Invalid parameter type or range
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+        "500":
+          description: Internal Server Error - Database execution or scanning failure
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+      summary: Verunglückte nach Bundesland abrufen
+      tags:
+      - GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)
 swagger: "2.0"
