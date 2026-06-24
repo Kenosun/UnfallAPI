@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"database/sql"
 	"net/http"
 	"strconv"
 	"strings"
@@ -9,14 +8,6 @@ import (
 	"github.com/Kenosun/UnfallAPI/internal/data"
 	"github.com/gin-gonic/gin"
 )
-
-type AccidentHandler struct {
-	DB *sql.DB
-}
-
-type HTTPError struct {
-	Error string `json:"error" example:"invalid parameter format"`
-}
 
 // GetUnfallStatistik godoc
 //
