@@ -64,6 +64,17 @@ func main() {
 	r := gin.Default()
 	h := handlers.AccidentHandler{DB: db}
 
+	// load HTML templates
+	r.LoadHTMLGlob("templates/*")
+
+	// add route for index page
+	r.GET("/", func(c *gin.Context) {
+		c.HTML(200, "index.html", gin.H{
+			"title": "UnfallAPI",
+		})
+	})
+
+	// add API routes
 	api := r.Group("/api/v1")
 	{
 		api.GET("/unfallStatistik", h.GetUnfallStatistik)
@@ -95,16 +106,19 @@ func main() {
 		api.GET("/unfallVerunglueckteBundesland/jahre", h.GetUnfallVerunglueckteBundeslandJahre)
 
 		api.GET("/unfall", h.GetUnfall)
+		api.GET("/unfall/count", h.GetUnfallCount)
 		api.GET("/unfall/jahre", h.GetUnfallJahre)
 
 		api.GET("/ort", h.GetOrt)
 	}
 
+	// add Swagger documentation
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	println("")
 	log.Info("API endpoints available", "url", "http://localhost:"+port+"/api/v1/<endpoint>")
 	log.Info("Swagger documentation available", "url", "http://localhost:"+port+"/swagger/index.html")
+	log.Info("UnfallAPI Demo available", "url", "http://localhost:"+port)
 	println("")
 
 	r.Run(":" + port)
