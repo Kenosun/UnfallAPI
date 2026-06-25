@@ -576,6 +576,187 @@ paths:
       summary: Detalierte Verkehrsunfälle mit Personenschaden im Unfallatlas abrufen
       tags:
       - Unfallatlas
+  /unfall/count:
+    get:
+      consumes:
+      - application/json
+      description: Gibt die Anzahl aller Unfälle zurück, die den angegebenen Filterkriterien
+        entsprechen.
+      parameters:
+      - description: Filter nach Bundesland
+        enum:
+        - Baden-Württemberg
+        - Bayern
+        - Berlin
+        - Brandenburg
+        - Bremen
+        - Hamburg
+        - Hessen
+        - Mecklenburg-Vorpommern
+        - Niedersachsen
+        - Nordrhein-Westfalen
+        - Rheinland-Pfalz
+        - Saarland
+        - Sachsen
+        - Sachsen-Anhalt
+        - Schleswig-Holstein
+        - Thüringen
+        in: query
+        name: bundesland
+        type: string
+      - description: Filter nach Regierungsbezirk (Amtlicher Gemeindeschlüssel)
+        in: query
+        name: regierungsbezirk
+        type: string
+      - description: Filter nach Kreis (Amtlicher Gemeindeschlüssel)
+        in: query
+        name: kreis
+        type: string
+      - description: Filter nach Gemeinde (Amtlicher Gemeindeschlüssel)
+        in: query
+        name: gemeinde
+        type: string
+      - description: Filter nach Jahr
+        in: query
+        name: jahr
+        type: integer
+      - description: Filter nach Monat (1-12)
+        in: query
+        maximum: 12
+        minimum: 1
+        name: monat
+        type: integer
+      - description: Filter nach Uhrzeit (xx:00 Uhr)
+        in: query
+        name: uhrzeit
+        type: string
+      - description: Filter nach Wochentag
+        enum:
+        - Montag
+        - Dienstag
+        - Mittwoch
+        - Donnerstag
+        - Freitag
+        - Samstag
+        - Sonntag
+        in: query
+        name: wochentag
+        type: string
+      - description: Filter nach Schweregrad
+        enum:
+        - Unfall mit Getöteten
+        - Unfall mit Schwerverletzten
+        - Unfall mit Leichtverletzten
+        in: query
+        name: schweregrad
+        type: string
+      - description: Filter nach Unfallart
+        enum:
+        - Zusammenstoß mit anfahrendem/anhaltendem/ruhendem Fahrzeug
+        - Zusammenstoß mit vorausfahrendem/wartendem Fahrzeug
+        - Zusammenstoß mit seitlich in gleicher Richtung fahrendem Fahrzeug
+        - Zusammenstoß mit entgegenkommendem Fahrzeug
+        - Zusammenstoß mit einbiegendem/kreuzendem Fahrzeug
+        - Zusammenstoß zwischen Fahrzeug und Fußgänger
+        - Aufprall auf Fahrbahnhindernis
+        - Abkommen von Fahrbahn nach rechts
+        - Abkommen von Fahrbahn nach links
+        - Unfall anderer Art
+        in: query
+        name: unfallart
+        type: string
+      - description: Filter nach Unfalltyp
+        enum:
+        - Fahrunfall
+        - Abbiegeunfall
+        - Einbiegen/Kreuzen-Unfall
+        - Überschreiten-Unfall
+        - Unfall durch ruhenden Verkehr
+        - Unfall im Längsverkehr
+        - sonstiger Unfall
+        in: query
+        name: unfalltyp
+        type: string
+      - description: Filter nach Lichtverhätltnis
+        enum:
+        - Tageslicht
+        - Dämmerung
+        - Dunkelheit
+        in: query
+        name: lichtverhaeltnis
+        type: string
+      - description: Beteiligung von Fahrrädern (true/false)
+        in: query
+        name: mit_fahrrad
+        type: boolean
+      - description: Beteiligung von PKWs (true/false)
+        in: query
+        name: mit_pkw
+        type: boolean
+      - description: Beteiligung von Fußgängern (true/false)
+        in: query
+        name: mit_fussgaenger
+        type: boolean
+      - description: Beteiligung von Kraftfahrzeugen (true/false)
+        in: query
+        name: mit_kraftrad
+        type: boolean
+      - description: Beteiligung von Güterkraftfahrzeugen (true/false)
+        in: query
+        name: mit_gueterkraftfahrzeug
+        type: boolean
+      - description: Beteiligung von sonstigen Verkehrsmitteln (true/false)
+        in: query
+        name: mit_sonstigen_verkehrsmittel
+        type: boolean
+      - description: Filter nach Straßenzustand
+        enum:
+        - trocken
+        - nass/feucht/schlüpfrig
+        - winterglatt
+        in: query
+        name: strassenzustand
+        type: string
+      - description: Minimum Latitude
+        format: float64
+        in: query
+        name: min_lat
+        type: number
+      - description: Maximum Latitude
+        format: float64
+        in: query
+        name: max_lat
+        type: number
+      - description: Minimum Longitude
+        format: float64
+        in: query
+        name: min_lon
+        type: number
+      - description: Maximum Longitude
+        format: float64
+        in: query
+        name: max_lon
+        type: number
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'e.g. {\"count\": 42}'
+          schema:
+            additionalProperties:
+              type: integer
+            type: object
+        "400":
+          description: Bad Request - Invalid parameter type or range
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+        "500":
+          description: Internal Server Error - Database execution or scanning failure
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+      summary: "Anzahl der Verkehrsunfälle\tmit Personenschaden im Unfallatlas abrufen"
+      tags:
+      - Unfallatlas
   /unfall/jahre:
     get:
       description: Gibt alle Jahre zurück, für die Daten vorhanden sind.
@@ -808,7 +989,7 @@ paths:
           description: Internal Server Error - Database execution or scanning failure
           schema:
             $ref: '#/definitions/handlers.HTTPError'
-      summary: Verfügbare Arten von Fehlverhalten abrufen
+      summary: Verfügbare Kategorien von Fehlverhalten abrufen
       tags:
       - GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)
   /unfallPersonenschaden:

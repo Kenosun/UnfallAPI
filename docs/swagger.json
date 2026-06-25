@@ -457,6 +457,253 @@
                 }
             }
         },
+        "/unfall/count": {
+            "get": {
+                "description": "Gibt die Anzahl aller Unfälle zurück, die den angegebenen Filterkriterien entsprechen.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Unfallatlas"
+                ],
+                "summary": "Anzahl der Verkehrsunfälle\tmit Personenschaden im Unfallatlas abrufen",
+                "parameters": [
+                    {
+                        "enum": [
+                            "Baden-Württemberg",
+                            "Bayern",
+                            "Berlin",
+                            "Brandenburg",
+                            "Bremen",
+                            "Hamburg",
+                            "Hessen",
+                            "Mecklenburg-Vorpommern",
+                            "Niedersachsen",
+                            "Nordrhein-Westfalen",
+                            "Rheinland-Pfalz",
+                            "Saarland",
+                            "Sachsen",
+                            "Sachsen-Anhalt",
+                            "Schleswig-Holstein",
+                            "Thüringen"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Bundesland",
+                        "name": "bundesland",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter nach Regierungsbezirk (Amtlicher Gemeindeschlüssel)",
+                        "name": "regierungsbezirk",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter nach Kreis (Amtlicher Gemeindeschlüssel)",
+                        "name": "kreis",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter nach Gemeinde (Amtlicher Gemeindeschlüssel)",
+                        "name": "gemeinde",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Filter nach Jahr",
+                        "name": "jahr",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 12,
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "Filter nach Monat (1-12)",
+                        "name": "monat",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter nach Uhrzeit (xx:00 Uhr)",
+                        "name": "uhrzeit",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "Montag",
+                            "Dienstag",
+                            "Mittwoch",
+                            "Donnerstag",
+                            "Freitag",
+                            "Samstag",
+                            "Sonntag"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Wochentag",
+                        "name": "wochentag",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "Unfall mit Getöteten",
+                            "Unfall mit Schwerverletzten",
+                            "Unfall mit Leichtverletzten"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Schweregrad",
+                        "name": "schweregrad",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "Zusammenstoß mit anfahrendem/anhaltendem/ruhendem Fahrzeug",
+                            "Zusammenstoß mit vorausfahrendem/wartendem Fahrzeug",
+                            "Zusammenstoß mit seitlich in gleicher Richtung fahrendem Fahrzeug",
+                            "Zusammenstoß mit entgegenkommendem Fahrzeug",
+                            "Zusammenstoß mit einbiegendem/kreuzendem Fahrzeug",
+                            "Zusammenstoß zwischen Fahrzeug und Fußgänger",
+                            "Aufprall auf Fahrbahnhindernis",
+                            "Abkommen von Fahrbahn nach rechts",
+                            "Abkommen von Fahrbahn nach links",
+                            "Unfall anderer Art"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Unfallart",
+                        "name": "unfallart",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "Fahrunfall",
+                            "Abbiegeunfall",
+                            "Einbiegen/Kreuzen-Unfall",
+                            "Überschreiten-Unfall",
+                            "Unfall durch ruhenden Verkehr",
+                            "Unfall im Längsverkehr",
+                            "sonstiger Unfall"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Unfalltyp",
+                        "name": "unfalltyp",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "Tageslicht",
+                            "Dämmerung",
+                            "Dunkelheit"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Lichtverhätltnis",
+                        "name": "lichtverhaeltnis",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Beteiligung von Fahrrädern (true/false)",
+                        "name": "mit_fahrrad",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Beteiligung von PKWs (true/false)",
+                        "name": "mit_pkw",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Beteiligung von Fußgängern (true/false)",
+                        "name": "mit_fussgaenger",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Beteiligung von Kraftfahrzeugen (true/false)",
+                        "name": "mit_kraftrad",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Beteiligung von Güterkraftfahrzeugen (true/false)",
+                        "name": "mit_gueterkraftfahrzeug",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Beteiligung von sonstigen Verkehrsmitteln (true/false)",
+                        "name": "mit_sonstigen_verkehrsmittel",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "trocken",
+                            "nass/feucht/schlüpfrig",
+                            "winterglatt"
+                        ],
+                        "type": "string",
+                        "description": "Filter nach Straßenzustand",
+                        "name": "strassenzustand",
+                        "in": "query"
+                    },
+                    {
+                        "type": "number",
+                        "format": "float64",
+                        "description": "Minimum Latitude",
+                        "name": "min_lat",
+                        "in": "query"
+                    },
+                    {
+                        "type": "number",
+                        "format": "float64",
+                        "description": "Maximum Latitude",
+                        "name": "max_lat",
+                        "in": "query"
+                    },
+                    {
+                        "type": "number",
+                        "format": "float64",
+                        "description": "Minimum Longitude",
+                        "name": "min_lon",
+                        "in": "query"
+                    },
+                    {
+                        "type": "number",
+                        "format": "float64",
+                        "description": "Maximum Longitude",
+                        "name": "max_lon",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "e.g. {\\\"count\\\": 42}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "integer"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - Invalid parameter type or range",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error - Database execution or scanning failure",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
         "/unfall/jahre": {
             "get": {
                 "description": "Gibt alle Jahre zurück, für die Daten vorhanden sind.",
@@ -762,7 +1009,7 @@
                 "tags": [
                     "GENESIS-Online (Die Datenbank des Statistischen Bundesamtes)"
                 ],
-                "summary": "Verfügbare Arten von Fehlverhalten abrufen",
+                "summary": "Verfügbare Kategorien von Fehlverhalten abrufen",
                 "responses": {
                     "200": {
                         "description": "OK",
