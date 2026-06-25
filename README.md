@@ -6,9 +6,10 @@ Eine Go-basierte API zur Verarbeitung und Abfrage von Verkehrsunfalldaten in Deu
 
 Die Anwendung nutzt ausschließlich öffentliche Datenquellen:
 
-- Unfallatlas (OpenGeodata.NRW)
+- Unfallatlas ([OpenGeodata.NRW](https://www.opengeodata.nrw.de/produkte/transport_verkehr/unfallatlas/))
 - Destatis (Statistisches Bundesamt)
-- GENESIS-Online
+  - [GENESIS-Online](https://genesis.destatis.de/datenbank/online/statistic/46241/details)
+  - [Gemeindeverzeichnis](https://www.destatis.de/DE/Themen/Laender-Regionen/Regionales/Gemeindeverzeichnis/_inhalt.html#101366)
 
 ## Funktionen
 
