@@ -20,7 +20,7 @@
         text-align: center;
       }
       main {
-        max-width: 1100px;
+        max-width: 1200px;
         margin: 1.5rem auto;
         padding: 0 1rem;
       }
@@ -33,6 +33,29 @@
       }
       .card h2 {
         margin-top: 0;
+        border-bottom: 2px solid #f0f2f5;
+        padding-bottom: 0.5rem;
+        margin-bottom: 1rem;
+        color: #003366;
+      }
+      .badge {
+        background-color: #e0f2fe;
+        color: #0369a1;
+        padding: 0.2rem 0.5rem;
+        border-radius: 6px;
+        font-size: 0.8rem;
+        margin-left: 0.5rem;
+        vertical-align: middle;
+      }
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+      }
+      @media (max-width: 768px) {
+        .grid-2 {
+          grid-template-columns: 1fr;
+        }
       }
       .button-list {
         display: flex;
@@ -53,10 +76,15 @@
         padding: 0.9rem 1rem;
         font-size: 0.95rem;
         cursor: pointer;
-        transition: background 0.2s;
+        transition:
+          background 0.2s,
+          transform 0.1s;
       }
       button:hover {
         background: #004080;
+      }
+      button:active {
+        transform: scale(0.98);
       }
       .result-box {
         background: #f3f6fb;
@@ -67,7 +95,8 @@
         font-family: monospace;
         width: 100%;
         box-sizing: border-box;
-        display: none; /* hidden until clicked */
+        display: none;
+        line-height: 1.4;
       }
       .field-group {
         display: flex;
@@ -75,21 +104,32 @@
         gap: 0.75rem;
         align-items: center;
         margin-bottom: 1rem;
+        background: #fafbfc;
+        padding: 1rem;
+        border-radius: 8px;
+        border: 1px solid #eaeef2;
       }
       input,
       select {
         padding: 0.7rem 0.8rem;
         border-radius: 8px;
         border: 1px solid #ccd4dd;
-        min-width: 220px;
+        min-width: 200px;
       }
       .footer {
         text-align: center;
         color: #555;
-        padding: 1rem 0;
+        padding: 2rem 0;
+        font-size: 0.9rem;
       }
       a {
         color: #0055a5;
+      }
+      .chart-container {
+        position: relative;
+        height: 350px;
+        width: 100%;
+        margin-top: 1rem;
       }
     </style>
   </head>
@@ -97,9 +137,10 @@
     <header>
       <h1>UnfallAPI Demo</h1>
     </header>
+
     <main>
       <section class="card">
-        <h2>Pflichtfragen</h2>
+        <h2>Basis-Abfragen</h2>
         <div class="button-list">
           <div class="query-group">
             <button onclick="fruehestesUnfalljahr()">
@@ -145,41 +186,9 @@
       </section>
 
       <section class="card">
-        <h2>Interaktiv</h2>
-        <div class="field-group">
-          <label for="first-year-by-region"
-            >Ab welchem Jahr sind Daten für folgendes Bundesland
-            verfügbar?</label
-          >
-          <select id="first-year-by-region">
-            <option>Baden-Württemberg</option>
-            <option>Bayern</option>
-            <option>Berlin</option>
-            <option>Brandenburg</option>
-            <option>Bremen</option>
-            <option>Hamburg</option>
-            <option>Hessen</option>
-            <option>Mecklenburg-Vorpommern</option>
-            <option>Niedersachsen</option>
-            <option>Nordrhein-Westfalen</option>
-            <option>Rheinland-Pfalz</option>
-            <option>Saarland</option>
-            <option selected>Sachsen</option>
-            <option>Sachsen-Anhalt</option>
-            <option>Schleswig-Holstein</option>
-            <option>Thüringen</option>
-          </select>
-          <button onclick="fruehestesUnfalljahrBundeslandInteraktiv()">
-            Abfrage starten
-          </button>
-        </div>
-        <pre id="interactive" class="result-box"></pre>
-      </section>
-
-      <section class="card">
         <h2>Monatliche Trends (Linien­diagramm)</h2>
         <div class="field-group">
-          <label for="trend-bundesland">Bundesland:</label>
+          <label>Bundesland:</label>
           <select id="trend-bundesland">
             <option>Baden-Württemberg</option>
             <option>Bayern</option>
@@ -198,8 +207,7 @@
             <option>Schleswig-Holstein</option>
             <option>Thüringen</option>
           </select>
-
-          <label for="trend-jahr">Jahr:</label>
+          <label>Jahr:</label>
           <select id="trend-jahr">
             <option>2026</option>
             <option selected>2025</option>
@@ -213,10 +221,9 @@
             <option>2017</option>
             <option>2016</option>
           </select>
-
           <button onclick="updateMonthlyTrendChart()">Trend laden</button>
         </div>
-        <div style="position: relative; height: 300px; width: 100%">
+        <div class="chart-container">
           <canvas id="monthlyTrendChart"></canvas>
         </div>
       </section>
@@ -224,7 +231,6 @@
       <section class="card">
         <h2>Bundesländervergleich (Balken­diagramm)</h2>
         <div class="field-group">
-          <label>Vergleiche:</label>
           <select id="comp-state-1">
             <option>Baden-Württemberg</option>
             <option>Bayern</option>
@@ -281,10 +287,135 @@
             <option>Schleswig-Holstein</option>
             <option>Thüringen</option>
           </select>
+          <label>Jahr:</label>
+          <select id="comp-jahr">
+            <option>2024</option>
+            <option>2023</option>
+            <option selected>2022</option>
+            <option>2021</option>
+            <option>2020</option>
+            <option>2019</option>
+            <option>2018</option>
+            <option>2017</option>
+            <option>2016</option>
+          </select>
+          <button onclick="updateComparisonChart()">Vergleich laden</button>
+        </div>
+        <div class="chart-container">
+          <canvas id="comparisonChart"></canvas>
+        </div>
+      </section>
 
-          <div>
-            <label for="comp-jahr">Jahr:</label>
-            <select id="comp-jahr">
+      <section class="card">
+        <h2>Kombinierte Abfragen (Multi-Endpoint)</h2>
+        <p style="font-size: 0.9rem; color: #555; margin-bottom: 1rem">
+          Diese Abfragen verknüpfen das Gemeindeverzeichnis (<code>/ort</code>)
+          mit den Unfalldaten (<code>/unfall...</code>), um komplexere Fragen zu
+          beantworten.
+        </p>
+
+        <div class="grid-2">
+          <div class="query-group">
+            <label
+              ><strong>Anzahl der Unfälle an einem bestimmten Ort</strong
+              ><br /><small
+                >Sucht den AGS (Amtlicher Gemeindeschlüssel) via Ortsname und
+                gibt die Anzahl der Unfälle in dem gesuchten Jahr zurück.</small
+              ></label
+            >
+            <div
+              class="field-group"
+              style="width: 100%; box-sizing: border-box"
+            >
+              <input
+                type="text"
+                id="multi-city-name"
+                value="Chemnitz"
+                placeholder="Ort eingeben..."
+              />
+              <select id="multi-city-year">
+                <option>2024</option>
+                <option>2023</option>
+                <option selected>2022</option>
+                <option>2021</option>
+                <option>2020</option>
+                <option>2019</option>
+                <option>2018</option>
+                <option>2017</option>
+                <option>2016</option>
+              </select>
+              <button onclick="anzahlUnfallBestimmterOrt()">Abfragen</button>
+            </div>
+            <pre id="res-city" class="result-box"></pre>
+          </div>
+
+          <div class="query-group">
+            <label
+              ><strong>Unfallquote je 100.000 Einwohner</strong><br /><small
+                >Aggregiert die Einwohnerzahl aller Gemeinden eines Bundeslandes
+                und berechnet die Quote pro 100.000 EW.</small
+              ></label
+            >
+            <div
+              class="field-group"
+              style="width: 100%; box-sizing: border-box"
+            >
+              <select id="multi-risk-state">
+                <option>Baden-Württemberg</option>
+                <option>Bayern</option>
+                <option>Berlin</option>
+                <option>Brandenburg</option>
+                <option>Bremen</option>
+                <option>Hamburg</option>
+                <option>Hessen</option>
+                <option>Mecklenburg-Vorpommern</option>
+                <option>Niedersachsen</option>
+                <option>Nordrhein-Westfalen</option>
+                <option>Rheinland-Pfalz</option>
+                <option>Saarland</option>
+                <option selected>Sachsen</option>
+                <option>Sachsen-Anhalt</option>
+                <option>Schleswig-Holstein</option>
+                <option>Thüringen</option>
+              </select>
+              <select id="multi-risk-year">
+                <option>2024</option>
+                <option>2023</option>
+                <option selected>2022</option>
+                <option>2021</option>
+                <option>2020</option>
+                <option>2019</option>
+                <option>2018</option>
+                <option>2017</option>
+                <option>2016</option>
+              </select>
+              <button onclick="unfallQuote()">Risiko berechnen</button>
+            </div>
+            <pre id="res-risk" class="result-box"></pre>
+          </div>
+        </div>
+      </section>
+
+      <div class="grid-2">
+        <section class="card">
+          <h2>Top 5 Hauptunfallursachen nach Verkehrsart (Fehlverhalten)</h2>
+          <div class="field-group">
+            <select id="fehl-fahrzeug">
+              <option>Kraftrad mit Versicherungskennzeichen</option>
+              <option>Kraftrad mit amtlichem Kennzeichen</option>
+              <option>Elektrokleinstfahrzeuge</option>
+              <option selected>Personenkraftwagen</option>
+              <option>Kraftomnibus</option>
+              <option>Güterkraftfahrzeug</option>
+              <option>Landwirtschaftliche Zugmaschine</option>
+              <option>Übrige Kraftfahrzeuge</option>
+              <option>Fahrrad ohne Hilfsmotor</option>
+              <option>Pedelecs</option>
+              <option>Andere Fahrzeuge</option>
+              <option>Fußgänger</option>
+              <option>Andere Personen</option>
+            </select>
+            <select id="fehl-jahr">
               <option>2024</option>
               <option>2023</option>
               <option selected>2022</option>
@@ -295,20 +426,57 @@
               <option>2017</option>
               <option>2016</option>
             </select>
+            <button onclick="updateFehlverhaltenChart()">Analysieren</button>
           </div>
+          <div class="chart-container" style="height: 280px">
+            <canvas id="fehlverhaltenChart"></canvas>
+          </div>
+        </section>
 
-          <button onclick="updateComparisonChart()">Vergleich laden</button>
-        </div>
-        <div style="position: relative; height: 300px; width: 100%">
-          <canvas id="comparisonChart"></canvas>
-        </div>
-      </section>
+        <section class="card">
+          <h2>Unfallverteilung je nach Straßenklasse</h2>
+          <div class="field-group">
+            <select id="strassen-state">
+              <option>Baden-Württemberg</option>
+              <option>Bayern</option>
+              <option>Berlin</option>
+              <option>Brandenburg</option>
+              <option>Bremen</option>
+              <option>Hamburg</option>
+              <option>Hessen</option>
+              <option>Mecklenburg-Vorpommern</option>
+              <option>Niedersachsen</option>
+              <option>Nordrhein-Westfalen</option>
+              <option>Rheinland-Pfalz</option>
+              <option>Saarland</option>
+              <option selected>Sachsen</option>
+              <option>Sachsen-Anhalt</option>
+              <option>Schleswig-Holstein</option>
+              <option>Thüringen</option>
+            </select>
+            <select id="strassen-jahr">
+              <option>2024</option>
+              <option>2023</option>
+              <option selected>2022</option>
+              <option>2021</option>
+              <option>2020</option>
+              <option>2019</option>
+              <option>2018</option>
+              <option>2017</option>
+              <option>2016</option>
+            </select>
+            <button onclick="updateStrassenChart()">Darstellen</button>
+          </div>
+          <div class="chart-container" style="height: 280px">
+            <canvas id="strassenChart"></canvas>
+          </div>
+        </section>
+      </div>
     </main>
 
     <footer class="footer">
       <strong>Datenquellen:</strong> Unfallatlas (OpenGeodata.NRW), Destatis
-      (Statistisches Bundesamt), GENESIS-Online (Die Datenbank des Statistischen
-      Bundesamtes)
+      (Statistisches Bundesamt), GENESIS-Online<br />
       <p>
         Die API-Dokumentation ist unter
         <a href="/swagger/index.html" target="_blank">/swagger/index.html</a>
@@ -320,9 +488,8 @@
       // fetch API response
       async function fetchJson(path) {
         const response = await fetch(path);
-        if (!response.ok) {
+        if (!response.ok)
           throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
         return response.json();
       }
 
@@ -371,8 +538,9 @@
 
       // Frühestes Unfalljahr nach Bundesland -> /api/v1/unfallStatistikBundesland
       async function fruehestesUnfalljahrBundesland(bundesland) {
-        const url = `/api/v1/unfallStatistikBundesland?bundesland=${encodeURIComponent(bundesland)}`;
-        const data = await fetchJson(url);
+        const data = await fetchJson(
+          `/api/v1/unfallStatistikBundesland?bundesland=${encodeURIComponent(bundesland)}`,
+        );
         if (data && data.length > 0) {
           return data[0].jahr;
         }
@@ -385,29 +553,23 @@
           bundesland === "Nordrhein-Westfalen" ? "question3" : "question4";
         try {
           const firstYear = await fruehestesUnfalljahrBundesland(bundesland);
-          if (firstYear) {
+          if (firstYear)
             renderResultBox(
               boxId,
               "Frühestes Unfalljahr für " + bundesland + ": " + firstYear,
             );
-          } else {
-            renderResultBox(
-              boxId,
-              "Keine Daten für dieses Bundesland gefunden.",
-            );
-          }
         } catch (error) {
           renderResultBox(boxId, "Fehler: " + error.message);
         }
       }
 
-      // Unfälle mit Fußgängerbeteiligung 2023 in Berlin -> /api/v1/unfall
+      // Unfälle mit Fußgängerbeteiligung 2023 in Berlin -> /api/v1/unfall/count
       async function unfallFussgaengerBerlin2023() {
         const boxId = "question5";
         try {
-          const url =
-            "/api/v1/unfall/count?bundesland=Berlin&jahr=2023&mit_fussgaenger=true";
-          const data = await fetchJson(url);
+          const data = await fetchJson(
+            "/api/v1/unfall/count?bundesland=Berlin&jahr=2023&mit_fussgaenger=true",
+          );
           renderResultBox(
             boxId,
             "Unfälle mit Fußgängerbeteiligung 2023 in Berlin: " + data.count,
@@ -417,31 +579,9 @@
         }
       }
 
-      // Interaktiv: Frühestes Unfalljahr nach Bundesland
-      async function fruehestesUnfalljahrBundeslandInteraktiv() {
-        const boxId = "interactive";
-        const bundesland = document.getElementById(
-          "first-year-by-region",
-        ).value;
-        try {
-          const firstYear = await fruehestesUnfalljahrBundesland(bundesland);
-          if (firstYear) {
-            renderResultBox(
-              boxId,
-              "Frühestes Unfalljahr für " + bundesland + ": " + firstYear,
-            );
-          } else {
-            renderResultBox(boxId, "Keine Daten gefunden.");
-          }
-        } catch (error) {
-          renderResultBox(boxId, "Fehler:" + error.message);
-        }
-      }
-
       // Diagramme
       let trendChartInstance = null;
       let comparisonChartInstance = null;
-
       const MONTH_NAMES = [
         "Januar",
         "Februar",
@@ -457,26 +597,21 @@
         "Dezember",
       ];
 
-      // Monatlicher Trend (Linien­diagramm)
+      // Monatlicher Trend (Linien­diagramm) -> /api/v1/unfallStatistikBundesland
       async function updateMonthlyTrendChart() {
         const bundesland = document.getElementById("trend-bundesland").value;
         const jahr = document.getElementById("trend-jahr").value;
-
         try {
           const monthlyCounts = Array(12).fill(0);
-          const url = `/api/v1/unfallStatistikBundesland?bundesland=${encodeURIComponent(bundesland)}&jahr=${jahr}&unfallkategorie=Insgesamt`;
-          const data = await fetchJson(url);
-
+          const data = await fetchJson(
+            `/api/v1/unfallStatistikBundesland?bundesland=${encodeURIComponent(bundesland)}&jahr=${jahr}&unfallkategorie=Insgesamt`,
+          );
           data.forEach((item) => {
-            if (item.monat >= 1 && item.monat <= 12) {
+            if (item.monat >= 1 && item.monat <= 12)
               monthlyCounts[item.monat - 1] = item.anzahl || 0;
-            }
           });
 
-          if (trendChartInstance) {
-            trendChartInstance.destroy();
-          }
-
+          if (trendChartInstance) trendChartInstance.destroy();
           const ctx = document
             .getElementById("monthlyTrendChart")
             .getContext("2d");
@@ -499,41 +634,33 @@
             options: {
               responsive: true,
               maintainAspectRatio: false,
-              scales: {
-                y: { beginAtZero: true },
-              },
+              scales: { y: { beginAtZero: true } },
             },
           });
         } catch (error) {
-          alert("Fehler beim Laden des Trenddiagramms: " + error.message);
+          alert("Fehler: " + error.message);
         }
       }
 
-      // Vergleich Bundesländer (Balkendiagramm)
+      // Vergleich Bundesländer (Balkendiagramm) -> /api/v1/unfallStatistikBundesland
       async function updateComparisonChart() {
         const s1 = document.getElementById("comp-state-1").value;
         const s2 = document.getElementById("comp-state-2").value;
         const s3 = document.getElementById("comp-state-3").value;
         const jahr = document.getElementById("comp-jahr").value;
-
         const selectedStates = [...new Set([s1, s2, s3])];
-
         try {
-          const requests = selectedStates.map((state) => {
-            const url = `/api/v1/unfallStatistikBundesland?bundesland=${encodeURIComponent(state)}&jahr=${jahr}&monat=0&unfallkategorie=Insgesamt`;
-            return fetchJson(url);
-          });
-
+          const requests = selectedStates.map((state) =>
+            fetchJson(
+              `/api/v1/unfallStatistikBundesland?bundesland=${encodeURIComponent(state)}&jahr=${jahr}&monat=0&unfallkategorie=Insgesamt`,
+            ),
+          );
           const results = await Promise.all(requests);
+          const totals = results.map((data) =>
+            data.reduce((sum, item) => sum + (item.anzahl || 0), 0),
+          );
 
-          const totals = results.map((data) => {
-            return data.reduce((sum, item) => sum + (item.anzahl || 0), 0);
-          });
-
-          if (comparisonChartInstance) {
-            comparisonChartInstance.destroy();
-          }
-
+          if (comparisonChartInstance) comparisonChartInstance.destroy();
           const ctx = document
             .getElementById("comparisonChart")
             .getContext("2d");
@@ -562,15 +689,252 @@
             options: {
               responsive: true,
               maintainAspectRatio: false,
-              scales: {
-                y: { beginAtZero: true },
+              scales: { y: { beginAtZero: true } },
+            },
+          });
+        } catch (error) {
+          alert("Fehler: " + error.message);
+        }
+      }
+
+      // Anzahl der Unfälle an einem bestimmten Ort -> /api/v1/ort + /api/v1/unfall/count
+      async function anzahlUnfallBestimmterOrt() {
+        const boxId = "res-city";
+        const cityName = document
+          .getElementById("multi-city-name")
+          .value.trim();
+        const year = document.getElementById("multi-city-year").value;
+
+        if (!cityName)
+          return renderResultBox(boxId, "Bitte einen Ort eingeben.");
+        renderResultBox(boxId, "Lade Daten...");
+
+        try {
+          const ortData = await fetchJson(
+            `/api/v1/ort?name=${encodeURIComponent(cityName)}`,
+          );
+          if (!ortData || ortData.length === 0) {
+            return renderResultBox(
+              boxId,
+              `Keine Stadt namens '${cityName}' im Gemeindeverzeichnis gefunden.`,
+            );
+          }
+
+          // assume the first match is the desired one
+          const targetOrt = ortData[0];
+          const bundesland = targetOrt.bundesland;
+          const regierungsbezirk = targetOrt.regierungsbezirk;
+          const kreis = targetOrt.kreis;
+          const gemeinde = targetOrt.gemeinde;
+          const bevoelkerung = targetOrt.bevoelkerung;
+
+          const unfallCount = await fetchJson(
+            `/api/v1/unfall/count?bundesland=${bundesland}&regierungsbezirk=${regierungsbezirk}&kreis=${kreis}&gemeinde=${gemeinde}&jahr=${year}`,
+          );
+
+          const resultText = `Suchergebnis für: ${targetOrt.name} (${bundesland})
+---------------------------------------------------
+Einwohnerzahl:           ${bevoelkerung.toLocaleString("de-DE")}
+Verkehrsunfälle (${year}):  ${unfallCount.count || 0}`;
+
+          renderResultBox(boxId, resultText);
+        } catch (error) {
+          renderResultBox(boxId, "Fehler: " + error.message);
+        }
+      }
+
+      // Unfallquote je 100.000 Einwohner -> /api/v1/ort + /api/v1/unfallStatistikBundesland
+      async function unfallQuote() {
+        const boxId = "res-risk";
+        const state = document.getElementById("multi-risk-state").value;
+        const year = document.getElementById("multi-risk-year").value;
+
+        renderResultBox(boxId, "Berechne Unfallquote...");
+
+        try {
+          // Bevölkerung des Bundeslandes berechnen
+          const ortData = await fetchJson(
+            `/api/v1/ort?bundesland=${encodeURIComponent(state)}`,
+          );
+          if (!ortData || ortData.length === 0)
+            throw new Error("Keine Ortsdaten für dieses Bundesland.");
+
+          let totalPopulation = 0;
+          const processedGemeinden = new Set();
+
+          ortData.forEach((ort) => {
+            if (ort.gemeinde && !processedGemeinden.has(ort.gemeinde)) {
+              totalPopulation += ort.bevoelkerung || 0;
+              processedGemeinden.add(ort.gemeinde);
+            }
+          });
+
+          // Anzahl der Unfälle des Bundeslandes für das gegebene Jahr abrufen
+          const unfallData = await fetchJson(
+            `/api/v1/unfallStatistikBundesland?bundesland=${encodeURIComponent(state)}&jahr=${year}&monat=0&unfallkategorie=Insgesamt`,
+          );
+
+          const totalAccidents = unfallData.reduce(
+            (sum, item) => sum + (item.anzahl || 0),
+            0,
+          );
+
+          if (totalPopulation === 0)
+            throw new Error("Bevölkerungssumme ist 0.");
+
+          const riskPer100k = (
+            (totalAccidents / totalPopulation) *
+            100000
+          ).toFixed(2);
+
+          const resultText = `Statistik für: ${state} (${year})
+---------------------------------------------------
+Aggregierte Einwohnerzahl:    ${totalPopulation.toLocaleString("de-DE")}
+Insgesamt erfasste Unfälle:   ${totalAccidents.toLocaleString("de-DE")}
+Unfallquote:                  ${riskPer100k} Unfälle / 100.000 Einwohner`;
+
+          renderResultBox(boxId, resultText);
+        } catch (error) {
+          renderResultBox(boxId, "Fehler: " + error.message);
+        }
+      }
+
+      // weitere Diagramme
+      let fehlverhaltenChartInstance = null;
+      let strassenChartInstance = null;
+
+      // Top 5 Hauptunfallursachen nach Verkehrsart (Fehlverhalten) -> /api/v1/unfallFehlverhalten
+      async function updateFehlverhaltenChart() {
+        const fahrzeug = document.getElementById("fehl-fahrzeug").value;
+        const jahr = document.getElementById("fehl-jahr").value;
+
+        try {
+          const data = await fetchJson(
+            `/api/v1/unfallFehlverhalten?jahr=${jahr}&monat=0&verkehrsart=${encodeURIComponent(fahrzeug)}`,
+          );
+
+          // sort descending
+          const sorted = data.sort((a, b) => b.anzahl - a.anzahl);
+
+          // top 5 causes, bundle the rest
+          const top5 = sorted.slice(0, 5);
+          const restCount = sorted
+            .slice(5)
+            .reduce((sum, d) => sum + (d.anzahl || 0), 0);
+
+          const labels = top5.map((d) =>
+            d.fehlverhalten.length > 35
+              ? d.fehlverhalten.substring(0, 35) + "..."
+              : d.fehlverhalten,
+          );
+          const values = top5.map((d) => d.anzahl);
+
+          if (restCount > 0) {
+            labels.push("Sonstige Ursachen");
+            values.push(restCount);
+          }
+
+          if (fehlverhaltenChartInstance) fehlverhaltenChartInstance.destroy();
+
+          const ctx = document
+            .getElementById("fehlverhaltenChart")
+            .getContext("2d");
+          fehlverhaltenChartInstance = new Chart(ctx, {
+            type: "doughnut",
+            data: {
+              labels: labels,
+              datasets: [
+                {
+                  data: values,
+                  backgroundColor: [
+                    "#003f5c",
+                    "#2f4b7c",
+                    "#665191",
+                    "#a05195",
+                    "#d45087",
+                    "#f95d6a",
+                    "#ff7c43",
+                    "#ffa600",
+                  ],
+                  borderWidth: 1,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  position: "right",
+                  labels: { boxWidth: 12, font: { size: 10 } },
+                },
               },
             },
           });
         } catch (error) {
-          alert("Fehler beim Laden des Vergleichsdiagramms: " + error.message);
+          alert("Fehler: " + error.message);
         }
       }
+
+      // Unfallverteilung je nach Straßenklasse -> /api/v1/unfallStrassenverkehrBundesland
+      async function updateStrassenChart() {
+        const state = document.getElementById("strassen-state").value;
+        const jahr = document.getElementById("strassen-jahr").value;
+
+        try {
+          const data = await fetchJson(
+            `/api/v1/unfallStrassenverkehrBundesland?bundesland=${encodeURIComponent(state)}&jahr=${jahr}`,
+          );
+
+          const targetClasses = [
+            "Autobahnen",
+            "Bundesstraßen",
+            "Landesstraßen",
+            "Kreisstraßen",
+          ];
+          const values = targetClasses.map((klasse) => {
+            const row = data.find((d) => d.strassenklasse === klasse);
+            return row ? row.anzahl : 0;
+          });
+
+          if (strassenChartInstance) strassenChartInstance.destroy();
+
+          const ctx = document.getElementById("strassenChart").getContext("2d");
+          strassenChartInstance = new Chart(ctx, {
+            type: "radar",
+            data: {
+              labels: targetClasses,
+              datasets: [
+                {
+                  label: `Unfälle ${jahr}`,
+                  data: values,
+                  backgroundColor: "rgba(0, 85, 165, 0.2)",
+                  borderColor: "#0055a5",
+                  pointBackgroundColor: "#0055a5",
+                  borderWidth: 2,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                r: { beginAtZero: true, ticks: { display: false } },
+              },
+            },
+          });
+        } catch (error) {
+          alert("Fehler: " + error.message);
+        }
+      }
+
+      // initialize charts on load
+      window.onload = () => {
+        updateMonthlyTrendChart();
+        updateComparisonChart();
+        updateFehlverhaltenChart();
+        updateStrassenChart();
+      };
     </script>
   </body>
 </html>
