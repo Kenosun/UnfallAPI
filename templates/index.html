@@ -389,7 +389,7 @@
                 <option>2017</option>
                 <option>2016</option>
               </select>
-              <button onclick="unfallQuote()">Risiko berechnen</button>
+              <button onclick="unfallQuote()">Unfallquote berechnen</button>
             </div>
             <pre id="res-risk" class="result-box"></pre>
           </div>
@@ -536,15 +536,49 @@
         }
       }
 
-      // Frühestes Unfalljahr nach Bundesland -> /api/v1/unfallStatistikBundesland
+      // Frühestes Unfalljahr nach Bundesland
       async function fruehestesUnfalljahrBundesland(bundesland) {
-        const data = await fetchJson(
-          `/api/v1/unfallStatistikBundesland?bundesland=${encodeURIComponent(bundesland)}`,
-        );
-        if (data && data.length > 0) {
-          return data[0].jahr;
+        // alle Endpunkte, die Bundesland als Parameter akzeptieren und Jahr zurückgeben
+        const endpoints = [
+          "/api/v1/unfall",
+          "/api/v1/unfallStatistikBundesland",
+          "/api/v1/unfallStrassenverkehrBundesland",
+          "/api/v1/unfallVerunglueckteBundesland",
+        ];
+
+        try {
+          const encodedBundesland = encodeURIComponent(bundesland);
+
+          const fetchPromises = endpoints.map((endpoint) =>
+            fetchJson(`${endpoint}?bundesland=${encodedBundesland}`).catch(
+              (err) => {
+                return [];
+              },
+            ),
+          );
+
+          const results = await Promise.all(fetchPromises);
+
+          let minYear = Infinity;
+
+          for (const dataset of results) {
+            if (!Array.isArray(dataset)) continue;
+
+            for (const record of dataset) {
+              if (
+                record &&
+                typeof record.jahr === "number" &&
+                record.jahr < minYear
+              ) {
+                minYear = record.jahr;
+              }
+            }
+          }
+
+          return minYear === Infinity ? null : minYear;
+        } catch (error) {
+          return null;
         }
-        return null;
       }
 
       // Frühestes Unfalljahr für Nordrhein-Westfalen und Mecklenburg-Vorpommern
@@ -720,8 +754,25 @@
             );
           }
 
-          // assume the first match is the desired one
-          const targetOrt = ortData[0];
+          let targetOrt;
+          // try to find location with exact match first
+          const exactMatch = ortData.find((ort) => {
+            const baseName = ort.name.split(",")[0].trim().toLowerCase();
+            return baseName === cityName.toLowerCase();
+          });
+
+          if (exactMatch) {
+            targetOrt = exactMatch;
+          } else {
+            // sort by population descending and pick the largest
+            const sortedData = [...ortData].sort((a, b) => {
+              const popA = a.bevoelkerung || 0;
+              const popB = b.bevoelkerung || 0;
+              return popB - popA;
+            });
+            targetOrt = sortedData[0];
+          }
+
           const bundesland = targetOrt.bundesland;
           const regierungsbezirk = targetOrt.regierungsbezirk;
           const kreis = targetOrt.kreis;
